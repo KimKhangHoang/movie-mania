@@ -32,7 +32,7 @@ function App() {
   };
 
   return (
-    <Router basename="/movie-mania">
+    <Router>
       {/* Navbar */}
       <nav className="navbar">
         <div className="nav-links-container">
