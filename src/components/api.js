@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+// All TMDB requests go through our own /api/tmdb proxy, which adds the API key on the server
+const tmdbGet = (path, params = {}) => axios.get('/api/tmdb', { params: { path, ...params } });
 
-export const fetchPopularMovies = async () => { // fetch a list of popular movies
+export const fetchPopularMovies = async () => {
+  // fetch a list of popular movies
   try {
-    const response = await axios.get('https://api.themoviedb.org/3/movie/popular', { // make a GET request to the TMDB API using axios
-      params: { api_key: API_KEY }
-    });
+    const response = await tmdbGet('movie/popular');
     return response.data.results; // return the list of movies
   } catch (error) {
     console.error('Error fetching popular movies: ', error); // if there is an error, log it to the console
@@ -14,13 +14,11 @@ export const fetchPopularMovies = async () => { // fetch a list of popular movie
   }
 };
 
-export const fetchMovieDetails = async (id) => { // fetch a movie details
+export const fetchMovieDetails = async (id) => {
+  // fetch a movie details
   try {
-    const response = await axios.get(`https://api.themoviedb.org/3/movie/${id}`, { // make a GET request to the TMDB API using axios
-      params: {
-        api_key: API_KEY,
-        append_to_response: 'videos', // add this parameter to include video data
-      }
+    const response = await tmdbGet(`movie/${id}`, {
+      append_to_response: 'videos', // add this parameter to include video data
     });
     return response.data; // return the movie details
   } catch (error) {
@@ -29,14 +27,10 @@ export const fetchMovieDetails = async (id) => { // fetch a movie details
   }
 };
 
-export const fetchMovieQuery = async (query) => { // fetch a list of movies based on the query
+export const fetchMovieQuery = async (query) => {
+  // fetch a list of movies based on the query
   try {
-    const response = await axios.get('https://api.themoviedb.org/3/search/movie', {
-      params: {
-        api_key: API_KEY,
-        query: query
-      }
-    });
+    const response = await tmdbGet('search/movie', { query });
     return response.data.results;
   } catch (error) {
     console.error('Error fetching movies by query: ', error);
