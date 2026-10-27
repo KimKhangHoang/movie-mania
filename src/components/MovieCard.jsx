@@ -7,11 +7,7 @@ const MovieCard = ({ movie, onWishButtonClick, wishButtonLabel, onWatchedButtonC
   return (
     <div className="card">
       <Link to={`/movie/${id}`} className="card-link">
-        <img
-          src={`https://image.tmdb.org/t/p/w500${poster_path}`}
-          className="card-img-top"
-          alt={`${title} poster`}
-        />
+        <img src={`https://image.tmdb.org/t/p/w500${poster_path}`} className="card-img-top" alt={`${title} poster`} />
         <div className="card-body">
           <h5 className="card-title">{title}</h5>
           <p className="card-text">Release Date: {release_date}</p>
@@ -20,7 +16,7 @@ const MovieCard = ({ movie, onWishButtonClick, wishButtonLabel, onWatchedButtonC
 
       {/* Button for wish list actions */}
       <button
-        className={wishButtonLabel === "Added to wish list" ? "btn-added-wish" : "btn-normal-wish"} // apply btn-added class if added
+        className={wishButtonLabel === 'Added to wish list' ? 'btn-added-wish' : 'btn-normal-wish'} // apply btn-added class if added
         onClick={() => onWishButtonClick(movie)}
       >
         <i className="fas fa-heart btn-icon"></i>
@@ -29,7 +25,7 @@ const MovieCard = ({ movie, onWishButtonClick, wishButtonLabel, onWatchedButtonC
 
       {/* Button for watched movies actions */}
       <button
-        className={watchedButtonLabel === "Added to watched movies" ? "btn-added-watched" : "btn-normal-watched"} // apply btn-added class if added
+        className={watchedButtonLabel === 'Added to watched movies' ? 'btn-added-watched' : 'btn-normal-watched'} // apply btn-added class if added
         onClick={() => onWatchedButtonClick(movie)}
       >
         <i className="fas fa-eye btn-icon"></i>
