@@ -8,6 +8,9 @@
 # production
 /dist
 
+# Vercel CLI
+.vercel
+
 # misc
 .DS_Store
 
