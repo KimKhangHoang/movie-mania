@@ -49,6 +49,7 @@ Other scripts:
 - `npm run build` builds the production site into `dist/`
 - `npm run preview` serves the production build locally, including the API proxy
 - `npm run lint` checks the code with Oxlint
+- `npm run format` formats the code with Prettier
 
 ## Deployment
 
