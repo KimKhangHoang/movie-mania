@@ -2,6 +2,8 @@
 
 This repository contains the source code for a web application that allows users to browse, manage, and track movies.
 
+**Live demo:** [movie-mania-roan-three.vercel.app](https://movie-mania-roan-three.vercel.app)
+
 ## Features
 
 - Browse popular movies
