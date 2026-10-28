@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes, NavLink } from 'react-router-dom';
+import usePersistentState from './hooks/usePersistentState';
 import Movies from './pages/Movies';
 import WishList from './pages/WishList';
 import WatchedMovies from './pages/WatchedMovies';
@@ -8,8 +9,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 function App() {
-  const [wishList, setWishList] = useState([]); // wish list state
-  const [watchedMovies, setWatchedMovies] = useState([]); // watched movies state
+  const [wishList, setWishList] = usePersistentState('wish-list', []); // wish list state, saved in the browser
+  const [watchedMovies, setWatchedMovies] = usePersistentState('watched-movies', []); // watched movies state, saved in the browser
 
   const addToWishList = (movie) => {
     // add a movie to the wish list
