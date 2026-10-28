@@ -1,0 +1,2 @@
+# Use LF line endings on every platform, matching Prettier's output
+* text=auto eol=lf

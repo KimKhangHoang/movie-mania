@@ -17,11 +17,11 @@ function WatchedMovies({ wishList, watchedMovies, onAddToWishList, onRemoveFromW
                 key={movie.id}
                 movie={movie}
                 onWishButtonClick={onAddToWishList} // pass the addToWishList function down to each movie card
-                wishButtonLabel={isAddedToWishList ? "Added to wish list" : "Add to wish list"} // pass the button label based on condition
+                wishButtonLabel={isAddedToWishList ? 'Added to wish list' : 'Add to wish list'} // pass the button label based on condition
                 onWatchedButtonClick={onRemoveFromWatchedMovies} // pass the removeFromWatchedMovies function down to each movie card
                 watchedButtonLabel="Remove from watched movies"
               />
-            )
+            );
           })}
         </div>
       )}
