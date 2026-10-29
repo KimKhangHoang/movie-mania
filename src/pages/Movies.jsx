@@ -1,12 +1,35 @@
 import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { fetchPopularMovies, fetchMovieQuery } from '../components/api';
 import MovieCard from '../components/MovieCard';
 
+const SEARCH_DELAY_MS = 400; // how long to wait after the last keystroke before searching
+
 function Movies({ wishList, watchedMovies, onAddToWishList, onAddToWatchedMovies }) {
-  const [query, setQuery] = useState(''); // a state to store the search query
+  const [searchParams, setSearchParams] = useSearchParams(); // the search lives in the URL (?q=...) so it survives navigation
+  const query = searchParams.get('q') ?? ''; // the search currently applied
+  const [inputValue, setInputValue] = useState(query); // what is typed in the search bar, updated on every keystroke
+  const [lastQuery, setLastQuery] = useState(query); // the query seen on the previous render
   const [movies, setMovies] = useState([]); // a state to store the movies to show
   const [loading, setLoading] = useState(true); // a state to track loading status
   const [error, setError] = useState(null); // a state for error detection
+
+  useEffect(() => {
+    // apply the search once typing pauses, instead of sending a request on every keystroke
+    const trimmed = inputValue.trim();
+    if (trimmed === query) return;
+
+    const timer = setTimeout(() => {
+      setSearchParams(trimmed ? { q: trimmed } : {}, { replace: true }); // replace, so each search doesn't add a history entry
+    }, SEARCH_DELAY_MS);
+    return () => clearTimeout(timer); // a new keystroke cancels the pending search
+  }, [inputValue, query, setSearchParams]);
+
+  // keep the search bar in step when the URL changes elsewhere, e.g. the Movies link or the back button
+  if (query !== lastQuery) {
+    setLastQuery(query);
+    if (inputValue.trim() !== query) setInputValue(query);
+  }
 
   useEffect(() => {
     let ignore = false; // set when a newer search starts, so a slower older response can't overwrite its results
@@ -35,7 +58,7 @@ function Movies({ wishList, watchedMovies, onAddToWishList, onAddToWatchedMovies
 
   const handleSearch = (event) => {
     // handle search query changes
-    setQuery(event.target.value);
+    setInputValue(event.target.value);
   };
 
   // decide what to show under the heading, keeping the search bar on screen in every case
@@ -84,7 +107,7 @@ function Movies({ wishList, watchedMovies, onAddToWishList, onAddToWatchedMovies
           type="text"
           className="search-bar"
           placeholder="Search movies..."
-          value={query}
+          value={inputValue}
           onChange={handleSearch}
         />
       </div>
