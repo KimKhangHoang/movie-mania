@@ -11,6 +11,7 @@ This repository contains the source code for a web application that allows users
 - View movies' properties and trailers
 - Add movies to wish list or watched movies
 - Remove movies from wish list or watched movies
+- Lists are saved in the browser, so they persist across visits
 - User-friendly and responsive interface
 
 ## Technologies Used
