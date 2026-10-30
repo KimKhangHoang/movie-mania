@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { formatReleaseDate } from '../utils/formatReleaseDate';
 
 const MovieCard = ({ movie, isInWishList, isWatched, onToggleWishList, onToggleWatched }) => {
   const { id, title, release_date, poster_path } = movie;
+  const releaseDate = formatReleaseDate(release_date);
 
   return (
     <div className="card">
@@ -17,7 +19,7 @@ const MovieCard = ({ movie, isInWishList, isWatched, onToggleWishList, onToggleW
         )}
         <div className="card-body">
           <h5 className="card-title">{title}</h5>
-          <p className="card-text">Release Date: {release_date}</p>
+          <p className="card-text">{releaseDate ? `Release date: ${releaseDate}` : 'Release date unknown'}</p>
         </div>
       </Link>
 

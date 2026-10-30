@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchMovieDetails } from '../components/api';
 import { useParams } from 'react-router-dom';
+import { formatReleaseDate } from '../utils/formatReleaseDate';
 
 function MovieDetail() {
   const { id } = useParams(); // get the movie ID from the URL
@@ -81,7 +82,7 @@ function MovieDetail() {
         {/* Movie Information */}
         <div className="movie-info">
           <p>
-            <strong>Release Date:</strong> {movie.release_date}
+            <strong>Release Date:</strong> {formatReleaseDate(movie.release_date) ?? 'Unknown'}
           </p>
           <p style={{ textAlign: 'justify' }}>
             <strong>Overview:</strong> {movie.overview}
