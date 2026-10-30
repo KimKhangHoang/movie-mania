@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const MovieCard = ({ movie, onWishButtonClick, wishButtonLabel, onWatchedButtonClick, watchedButtonLabel }) => {
+const MovieCard = ({ movie, isInWishList, isWatched, onToggleWishList, onToggleWatched }) => {
   const { id, title, release_date, poster_path } = movie;
 
   return (
@@ -14,22 +14,23 @@ const MovieCard = ({ movie, onWishButtonClick, wishButtonLabel, onWatchedButtonC
         </div>
       </Link>
 
-      {/* Button for wish list actions */}
+      {/* each button adds the movie to its list, or removes it if it's already there */}
       <button
-        className={wishButtonLabel === 'Added to wish list' ? 'btn-added-wish' : 'btn-normal-wish'} // apply btn-added class if added
-        onClick={() => onWishButtonClick(movie)}
+        type="button"
+        className={isInWishList ? 'btn-added-wish' : 'btn-normal-wish'}
+        onClick={() => onToggleWishList(movie)}
       >
         <i className="fas fa-heart btn-icon"></i>
-        {wishButtonLabel}
+        {isInWishList ? 'Remove from wish list' : 'Add to wish list'}
       </button>
 
-      {/* Button for watched movies actions */}
       <button
-        className={watchedButtonLabel === 'Added to watched movies' ? 'btn-added-watched' : 'btn-normal-watched'} // apply btn-added class if added
-        onClick={() => onWatchedButtonClick(movie)}
+        type="button"
+        className={isWatched ? 'btn-added-watched' : 'btn-normal-watched'}
+        onClick={() => onToggleWatched(movie)}
       >
         <i className="fas fa-eye btn-icon"></i>
-        {watchedButtonLabel}
+        {isWatched ? 'Remove from watched movies' : 'Add to watched movies'}
       </button>
     </div>
   );

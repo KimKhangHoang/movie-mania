@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { fetchPopularMovies, fetchMovieQuery } from '../components/api';
-import MovieCard from '../components/MovieCard';
+import MovieGrid from '../components/MovieGrid';
 
 const SEARCH_DELAY_MS = 400; // how long to wait after the last keystroke before searching
 
-function Movies({ wishList, watchedMovies, onAddToWishList, onAddToWatchedMovies }) {
+function Movies(listProps) {
   const [searchParams, setSearchParams] = useSearchParams(); // the search lives in the URL (?q=...) so it survives navigation
   const query = searchParams.get('q') ?? ''; // the search currently applied
   const [inputValue, setInputValue] = useState(query); // what is typed in the search bar, updated on every keystroke
@@ -76,26 +76,7 @@ function Movies({ wishList, watchedMovies, onAddToWishList, onAddToWatchedMovies
   } else if (movies.length === 0) {
     content = <p>{query ? `No movies found for "${query}".` : 'No movies to show right now.'}</p>;
   } else {
-    content = (
-      <div className="d-flex flex-wrap justify-content-center">
-        {movies.map((movie) => {
-          // render a MovieCard for each movie
-          const isAddedToWishList = wishList.some((wish) => wish.id === movie.id); // check if the movie is already in the wish list
-          const isAddedToWatchedMovies = watchedMovies.some((watched) => watched.id === movie.id); // check if the movie is already in the watched movies
-
-          return (
-            <MovieCard
-              key={movie.id}
-              movie={movie}
-              onWishButtonClick={onAddToWishList} // pass the addToWishList function down to each movie card
-              wishButtonLabel={isAddedToWishList ? 'Added to wish list' : 'Add to wish list'} // pass the button label based on condition
-              onWatchedButtonClick={onAddToWatchedMovies} // pass the addToWatchedMovies function down to each movie card
-              watchedButtonLabel={isAddedToWatchedMovies ? 'Added to watched movies' : 'Add to watched movies'} // pass the button label based on condition
-            />
-          );
-        })}
-      </div>
-    );
+    content = <MovieGrid movies={movies} {...listProps} />;
   }
 
   return (
