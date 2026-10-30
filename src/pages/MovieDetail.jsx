@@ -53,14 +53,26 @@ function MovieDetail() {
       {/* Backdrop Image */}
       <div
         className="movie-backdrop"
-        style={{ backgroundImage: `url(https://image.tmdb.org/t/p/w1280${movie.backdrop_path})` }}
+        style={
+          movie.backdrop_path ? { backgroundImage: `url(https://image.tmdb.org/t/p/w1280${movie.backdrop_path})` } : {}
+        }
       >
         <div className="overlay">
-          <img
-            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            alt={`Movie poster of ${movie.title}`}
-            className="movie-poster"
-          />
+          {movie.poster_path ? (
+            <img
+              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              alt={`Movie poster of ${movie.title}`}
+              className="movie-poster"
+            />
+          ) : (
+            <div
+              className="movie-poster poster-placeholder"
+              role="img"
+              aria-label={`No poster available for ${movie.title}`}
+            >
+              <i className="fas fa-film"></i>
+            </div>
+          )}
           <h1 className="movie-title">{movie.title}</h1>
         </div>
       </div>

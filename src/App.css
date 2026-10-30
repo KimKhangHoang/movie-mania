@@ -117,6 +117,19 @@ h1 {
   border-radius: 0.25rem;
   width: 100%;
   height: auto;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+}
+
+/* shown in place of a missing poster, at the same size */
+.poster-placeholder {
+  aspect-ratio: 2 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #bbb;
+  color: #777;
+  font-size: 3rem;
 }
 
 .card-body {

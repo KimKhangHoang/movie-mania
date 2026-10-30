@@ -7,7 +7,14 @@ const MovieCard = ({ movie, isInWishList, isWatched, onToggleWishList, onToggleW
   return (
     <div className="card">
       <Link to={`/movie/${id}`} className="card-link">
-        <img src={`https://image.tmdb.org/t/p/w500${poster_path}`} className="card-img-top" alt={`${title} poster`} />
+        {poster_path ? (
+          <img src={`https://image.tmdb.org/t/p/w500${poster_path}`} className="card-img-top" alt={`${title} poster`} />
+        ) : (
+          // some movies have no poster on TMDB, so show a placeholder instead of a broken image
+          <div className="card-img-top poster-placeholder" role="img" aria-label={`No poster available for ${title}`}>
+            <i className="fas fa-film"></i>
+          </div>
+        )}
         <div className="card-body">
           <h5 className="card-title">{title}</h5>
           <p className="card-text">Release Date: {release_date}</p>
