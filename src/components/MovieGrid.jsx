@@ -5,7 +5,7 @@ const isInList = (list, movie) => list.some((item) => item.id === movie.id);
 
 // Shows a grid of movie cards, marking which movies are already in each list
 const MovieGrid = ({ movies, wishList, watchedMovies, onToggleWishList, onToggleWatched }) => (
-  <div className="d-flex flex-wrap justify-content-center">
+  <div className="movie-grid">
     {movies.map((movie) => (
       <MovieCard
         key={movie.id}

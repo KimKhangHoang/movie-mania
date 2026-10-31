@@ -7,19 +7,19 @@ const MovieCard = ({ movie, isInWishList, isWatched, onToggleWishList, onToggleW
   const releaseDate = formatReleaseDate(release_date);
 
   return (
-    <div className="card">
+    <article className="card">
       <Link to={`/movie/${id}`} className="card-link">
         {poster_path ? (
-          <img src={`https://image.tmdb.org/t/p/w500${poster_path}`} className="card-img-top" alt={`${title} poster`} />
+          <img src={`https://image.tmdb.org/t/p/w500${poster_path}`} className="card-poster" alt="" loading="lazy" />
         ) : (
           // some movies have no poster on TMDB, so show a placeholder instead of a broken image
-          <div className="card-img-top poster-placeholder" role="img" aria-label={`No poster available for ${title}`}>
-            <i className="fas fa-film"></i>
+          <div className="poster-placeholder" aria-hidden="true">
+            <i className="fa-solid fa-film"></i>
           </div>
         )}
         <div className="card-body">
-          <h5 className="card-title">{title}</h5>
-          <p className="card-text">{releaseDate ? `Release date: ${releaseDate}` : 'Release date unknown'}</p>
+          <h2 className="card-title">{title}</h2>
+          <p className="card-text">{releaseDate ?? 'Release date unknown'}</p>
         </div>
       </Link>
 
@@ -27,23 +27,27 @@ const MovieCard = ({ movie, isInWishList, isWatched, onToggleWishList, onToggleW
       <div className="card-actions">
         <button
           type="button"
-          className={isInWishList ? 'btn-added-wish' : 'btn-normal-wish'}
+          className="toggle-button toggle-wish"
+          aria-pressed={isInWishList}
+          title={isInWishList ? 'Remove from wish list' : 'Add to wish list'}
           onClick={() => onToggleWishList(movie)}
         >
-          <i className="fas fa-heart btn-icon"></i>
-          {isInWishList ? 'Remove from wish list' : 'Add to wish list'}
+          <i className={`${isInWishList ? 'fa-solid' : 'fa-regular'} fa-heart`} aria-hidden="true"></i>
+          Wish list
         </button>
 
         <button
           type="button"
-          className={isWatched ? 'btn-added-watched' : 'btn-normal-watched'}
+          className="toggle-button toggle-watched"
+          aria-pressed={isWatched}
+          title={isWatched ? 'Remove from watched' : 'Mark as watched'}
           onClick={() => onToggleWatched(movie)}
         >
-          <i className="fas fa-eye btn-icon"></i>
-          {isWatched ? 'Remove from watched movies' : 'Add to watched movies'}
+          <i className={`${isWatched ? 'fa-solid' : 'fa-regular'} fa-eye`} aria-hidden="true"></i>
+          Watched
         </button>
       </div>
-    </div>
+    </article>
   );
 };
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { fetchPopularMovies, fetchMovieQuery } from '../components/api';
+import EmptyState from '../components/EmptyState';
 import MovieGrid from '../components/MovieGrid';
 
 const SEARCH_DELAY_MS = 400; // how long to wait after the last keystroke before searching
@@ -72,18 +73,24 @@ function Movies(listProps) {
       </div>
     );
   } else if (error) {
-    content = <div className="error">{error}</div>;
+    content = <p className="status-message error">{error}</p>;
   } else if (movies.length === 0) {
-    content = <p>{query ? `No movies found for "${query}".` : 'No movies to show right now.'}</p>;
+    content = (
+      <EmptyState icon="fa-magnifying-glass" title={query ? `No movies found for “${query}”` : 'No movies to show'}>
+        {query && <p>Check the spelling or try a different title.</p>}
+      </EmptyState>
+    );
   } else {
     content = <MovieGrid movies={movies} {...listProps} />;
   }
 
   return (
     <div className="movies-page">
+      <h1 className="page-title">{query ? `Results for “${query}”` : 'Popular movies'}</h1>
+
       {/* Search bar */}
       <div className="search-bar-container">
-        <i className="fas fa-search search-icon"></i>
+        <i className="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
         <input
           type="text"
           className="search-bar"
@@ -93,7 +100,6 @@ function Movies(listProps) {
         />
       </div>
 
-      <h1>Movies</h1>
       {content}
     </div>
   );

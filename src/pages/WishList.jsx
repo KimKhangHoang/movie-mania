@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import EmptyState from '../components/EmptyState';
 import MovieGrid from '../components/MovieGrid';
 
 const WishList = (listProps) => {
@@ -6,9 +8,14 @@ const WishList = (listProps) => {
 
   return (
     <div className="wishlist-page">
-      <h1>Wish List</h1>
+      <h1 className="page-title">Wish list</h1>
       {wishList.length === 0 ? (
-        <p>There are no movies in your wish list yet.</p>
+        <EmptyState icon="fa-heart" title="Your wish list is empty">
+          <p>Save movies you want to see by tapping Wish list on any movie.</p>
+          <Link to="/" className="button-link">
+            Browse movies
+          </Link>
+        </EmptyState>
       ) : (
         <MovieGrid movies={wishList} {...listProps} />
       )}
