@@ -12,30 +12,18 @@ function App() {
   const [wishList, setWishList] = usePersistentState('wish-list', []); // wish list state, saved in the browser
   const [watchedMovies, setWatchedMovies] = usePersistentState('watched-movies', []); // watched movies state, saved in the browser
 
-  const addToWishList = (movie) => {
-    // add a movie to the wish list
-    if (!wishList.some((wish) => wish.id === movie.id)) {
-      //check if the movie is already in the wish list
-      setWishList([...wishList, movie]);
-    }
-  };
+  // returns a handler that adds a movie to a list, or removes it if it's already there
+  const toggleInList = (setList) => (movie) =>
+    setList((list) =>
+      list.some((item) => item.id === movie.id) ? list.filter((item) => item.id !== movie.id) : [...list, movie],
+    );
 
-  const removeFromWishList = (movie) => {
-    // remove a movie from the wish list
-    setWishList(wishList.filter((wish) => wish.id !== movie.id));
-  };
-
-  const addToWatchedMovies = (movie) => {
-    // add a movie to the watched movies
-    if (!watchedMovies.some((watched) => watched.id === movie.id)) {
-      // check if the movie is already in the watched movies
-      setWatchedMovies([...watchedMovies, movie]);
-    }
-  };
-
-  const removeFromWatchedMovies = (movie) => {
-    // remove the movie from the watched movies
-    setWatchedMovies(watchedMovies.filter((watched) => watched.id !== movie.id));
+  // what every page needs to show and update both lists
+  const listProps = {
+    wishList,
+    watchedMovies,
+    onToggleWishList: toggleInList(setWishList),
+    onToggleWatched: toggleInList(setWatchedMovies),
   };
 
   return (
@@ -58,39 +46,9 @@ function App() {
       {/* Content */}
       <div className="content">
         <Routes>
-          <Route
-            path="/"
-            element={
-              <Movies
-                wishList={wishList}
-                watchedMovies={watchedMovies}
-                onAddToWishList={addToWishList}
-                onAddToWatchedMovies={addToWatchedMovies}
-              />
-            }
-          />
-          <Route
-            path="/wish-list"
-            element={
-              <WishList
-                wishList={wishList}
-                watchedMovies={watchedMovies}
-                onRemoveFromWishList={removeFromWishList}
-                onAddToWatchedMovies={addToWatchedMovies}
-              />
-            }
-          />
-          <Route
-            path="/watched-movies"
-            element={
-              <WatchedMovies
-                wishList={wishList}
-                watchedMovies={watchedMovies}
-                onAddToWishList={addToWishList}
-                onRemoveFromWatchedMovies={removeFromWatchedMovies}
-              />
-            }
-          />
+          <Route path="/" element={<Movies {...listProps} />} />
+          <Route path="/wish-list" element={<WishList {...listProps} />} />
+          <Route path="/watched-movies" element={<WatchedMovies {...listProps} />} />
           <Route path="/movie/:id" element={<MovieDetail />} />
         </Routes>
       </div>
