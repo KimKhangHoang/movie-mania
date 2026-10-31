@@ -53,7 +53,7 @@ function App() {
           <Route path="/" element={<Movies {...listProps} />} />
           <Route path="/wish-list" element={<WishList {...listProps} />} />
           <Route path="/watched-movies" element={<WatchedMovies {...listProps} />} />
-          <Route path="/movie/:id" element={<MovieDetail />} />
+          <Route path="/movie/:id" element={<MovieDetail {...listProps} />} />
         </Routes>
       </main>
     </Router>

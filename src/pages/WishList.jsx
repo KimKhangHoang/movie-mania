@@ -7,7 +7,7 @@ const WishList = (listProps) => {
   const { wishList } = listProps;
 
   return (
-    <div className="wishlist-page">
+    <div className="page wishlist-page">
       <h1 className="page-title">Wish list</h1>
       {wishList.length === 0 ? (
         <EmptyState icon="fa-heart" title="Your wish list is empty">

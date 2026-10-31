@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { formatReleaseDate } from '../utils/formatReleaseDate';
+import ListToggles from './ListToggles';
 
-const MovieCard = ({ movie, isInWishList, isWatched, onToggleWishList, onToggleWatched }) => {
+const MovieCard = ({ movie, ...toggleProps }) => {
   const { id, title, release_date, poster_path } = movie;
   const releaseDate = formatReleaseDate(release_date);
 
@@ -23,30 +24,7 @@ const MovieCard = ({ movie, isInWishList, isWatched, onToggleWishList, onToggleW
         </div>
       </Link>
 
-      {/* each button adds the movie to its list, or removes it if it's already there */}
-      <div className="card-actions">
-        <button
-          type="button"
-          className="toggle-button toggle-wish"
-          aria-pressed={isInWishList}
-          title={isInWishList ? 'Remove from wish list' : 'Add to wish list'}
-          onClick={() => onToggleWishList(movie)}
-        >
-          <i className={`${isInWishList ? 'fa-solid' : 'fa-regular'} fa-heart`} aria-hidden="true"></i>
-          Wish list
-        </button>
-
-        <button
-          type="button"
-          className="toggle-button toggle-watched"
-          aria-pressed={isWatched}
-          title={isWatched ? 'Remove from watched' : 'Mark as watched'}
-          onClick={() => onToggleWatched(movie)}
-        >
-          <i className={`${isWatched ? 'fa-solid' : 'fa-regular'} fa-eye`} aria-hidden="true"></i>
-          Watched
-        </button>
-      </div>
+      <ListToggles movie={movie} className="card-actions" {...toggleProps} />
     </article>
   );
 };

@@ -85,7 +85,8 @@
 
 /* ---------- Page layout ---------- */
 
-.content {
+/* each page limits its own width, so the detail page's hero can run edge to edge */
+.page {
   width: 100%;
   max-width: var(--page-width);
   margin: 0 auto;
@@ -361,97 +362,135 @@
 
 /* ---------- Movie detail page ---------- */
 
-.movie-details {
-  width: 100%;
-  overflow-x: hidden;
-}
-
-.movie-backdrop {
-  width: 100vw;
-  height: 100vh;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  position: relative;
+/* the backdrop fades into the page background, so the text on top stays readable */
+.detail-hero {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-end;
+  min-height: min(75vh, 42rem);
+  background-color: var(--color-surface);
+  background-image:
+    linear-gradient(to top, var(--color-bg) 0%, rgba(15, 17, 21, 0.8) 40%, rgba(15, 17, 21, 0.45) 100%),
+    var(--backdrop, none);
+  background-position: center;
+  background-size: cover;
 }
 
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
+.detail-hero-inner {
+  display: grid;
+  grid-template-columns: minmax(10rem, 16rem) 1fr;
+  align-items: end;
+  gap: clamp(1.5rem, 4vw, 3rem);
   width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 6rem var(--page-padding) 2.5rem;
+}
+
+.detail-poster {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.detail-info {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  gap: 1rem;
 }
 
-.movie-poster {
-  width: 9.375rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.3);
-  margin-bottom: 1rem;
+.detail-title {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
-.movie-title {
-  color: white;
-  font-size: 2rem;
-  font-weight: bold;
-  text-shadow: 0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.7);
-  margin: 0.5rem 0;
+.detail-tagline {
+  margin-top: -0.5rem;
+  font-style: italic;
+  color: var(--color-text-muted);
 }
 
-.movie-details-container {
+.detail-meta,
+.genre-list {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 3rem;
-  width: 100%;
-  height: max-content;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* dots between the date, runtime and rating */
+.detail-meta li:not(:last-child)::after {
+  content: '·';
+  margin-left: 0.5rem;
+  color: var(--color-text-muted);
+}
+
+.detail-rating-icon {
+  color: var(--color-accent);
+}
+
+.genre-tag {
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.detail-overview {
+  max-width: 45rem;
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.detail-actions .toggle-button {
+  flex: 0 0 auto;
+  padding: 0.7rem 1.25rem;
+  font-size: 0.95rem;
+}
+
+.section-title {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.detail-trailer {
+  padding-top: 1rem;
+}
+
+/* keeps the trailer at 16:9 at any width */
+.video-frame {
   overflow: hidden;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius);
+  background-color: #000;
 }
 
-.movie-info {
-  text-align: left;
-  width: 30rem;
-  height: fit-content;
-  margin-left: 2rem;
-  margin-right: 7%;
-  box-sizing: border-box;
-}
-
-.movie-trailer {
-  width: 50rem;
-  height: 30rem;
-  margin-right: 2rem;
-  box-sizing: border-box;
-}
-
-.movie-trailer iframe {
+.video-frame iframe {
   width: 100%;
   height: 100%;
-  border-radius: 1rem;
+  border: 0;
 }
 
-@media (max-width: 1440px) {
-  .movie-details-container {
-    display: flex;
-    flex-direction: column;
+/* on narrow screens the poster sits above the details */
+@media (max-width: 40rem) {
+  .detail-hero-inner {
+    grid-template-columns: 1fr;
+    padding-top: 3rem;
   }
 
-  .movie-info {
-    text-align: center;
-    margin: 2rem;
-  }
-
-  .movie-trailer {
-    margin-left: 2rem;
-    margin-right: 2rem;
+  .detail-poster {
+    width: 10rem;
   }
 }

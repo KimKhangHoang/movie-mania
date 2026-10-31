@@ -7,7 +7,7 @@ function WatchedMovies(listProps) {
   const { watchedMovies } = listProps;
 
   return (
-    <div className="watched-movies-page">
+    <div className="page watched-movies-page">
       <h1 className="page-title">Watched movies</h1>
       {watchedMovies.length === 0 ? (
         <EmptyState icon="fa-eye" title="No watched movies yet">

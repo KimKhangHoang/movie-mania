@@ -85,7 +85,7 @@ function Movies(listProps) {
   }
 
   return (
-    <div className="movies-page">
+    <div className="page movies-page">
       <h1 className="page-title">{query ? `Results for “${query}”` : 'Popular movies'}</h1>
 
       {/* Search bar */}

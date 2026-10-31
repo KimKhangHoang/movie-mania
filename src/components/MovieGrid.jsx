@@ -1,7 +1,6 @@
 import React from 'react';
+import { isInList } from '../utils/lists';
 import MovieCard from './MovieCard';
-
-const isInList = (list, movie) => list.some((item) => item.id === movie.id);
 
 // Shows a grid of movie cards, marking which movies are already in each list
 const MovieGrid = ({ movies, wishList, watchedMovies, onToggleWishList, onToggleWatched }) => (
