@@ -1,12 +1,112 @@
+/* Colours and sizes shared across the app */
+:root {
+  color-scheme: dark;
+
+  --color-bg: #0f1115;
+  --color-surface: #181b22;
+  --color-surface-raised: #222630;
+  --color-border: #2c313c;
+  --color-border-strong: #3d4452;
+  --color-text: #eceef2;
+  --color-text-muted: #a3a9b5;
+  --color-accent: #f5b942;
+  --color-on-accent: #14161c;
+  --color-wish: #ff5c7a;
+  --color-watched: #4fa3ff;
+  --color-error: #ff6b6b;
+
+  --radius: 0.75rem;
+  --shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.45);
+  --page-width: 75rem;
+  --page-padding: clamp(1rem, 4vw, 2.5rem);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
     'Helvetica Neue', sans-serif;
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+/* a clear ring around whatever has keyboard focus */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* the main area only takes focus from the skip link, so it doesn't need a ring */
+main:focus {
+  outline: none;
+}
+
+/* hidden until a keyboard user tabs to it */
+.skip-link {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 20;
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  font-weight: 700;
+  color: var(--color-on-accent);
+  background-color: var(--color-accent);
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+/* for people who have asked their device to reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* hidden on screen but still read out by screen readers */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

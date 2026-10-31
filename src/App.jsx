@@ -1,11 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, NavLink } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link, NavLink } from 'react-router-dom';
 import usePersistentState from './hooks/usePersistentState';
 import Movies from './pages/Movies';
 import WishList from './pages/WishList';
 import WatchedMovies from './pages/WatchedMovies';
 import MovieDetail from './pages/MovieDetail';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 function App() {
@@ -28,30 +27,48 @@ function App() {
 
   return (
     <Router>
-      {/* Navbar */}
-      <nav className="navbar">
-        <div className="nav-links-container">
-          <NavLink to="/" className="nav-link">
+      {/* lets keyboard users jump past the header straight to the page content */}
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+
+      <header className="site-header">
+        <Link to="/" className="brand">
+          <img src="/logo.svg" alt="" width="32" height="32" />
+          <span>
+            Movie<span className="brand-accent">Mania</span>
+          </span>
+        </Link>
+
+        <nav className="site-nav" aria-label="Main">
+          <NavLink to="/" end className="nav-link">
             Movies
           </NavLink>
           <NavLink to="/wish-list" className="nav-link">
-            Wish List
+            Wish list{' '}
+            <span className="nav-count">
+              {wishList.length}
+              <span className="visually-hidden"> movies</span>
+            </span>
           </NavLink>
           <NavLink to="/watched-movies" className="nav-link">
-            Watched Movies
+            Watched{' '}
+            <span className="nav-count">
+              {watchedMovies.length}
+              <span className="visually-hidden"> movies</span>
+            </span>
           </NavLink>
-        </div>
-      </nav>
+        </nav>
+      </header>
 
-      {/* Content */}
-      <div className="content">
+      <main id="main-content" className="content" tabIndex={-1}>
         <Routes>
           <Route path="/" element={<Movies {...listProps} />} />
           <Route path="/wish-list" element={<WishList {...listProps} />} />
           <Route path="/watched-movies" element={<WatchedMovies {...listProps} />} />
-          <Route path="/movie/:id" element={<MovieDetail />} />
+          <Route path="/movie/:id" element={<MovieDetail {...listProps} />} />
         </Routes>
-      </div>
+      </main>
     </Router>
   );
 }

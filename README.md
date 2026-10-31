@@ -1,18 +1,17 @@
-# Movie App
+# MovieMania
 
-This repository contains the source code for a web application that allows users to browse, manage, and track movies.
+A web app for browsing movies, watching trailers, and keeping track of what you want to see and what you've already watched.
 
 **Live demo:** [movie-mania-roan-three.vercel.app](https://movie-mania-roan-three.vercel.app)
 
 ## Features
 
-- Browse popular movies
-- Search for movies by title
-- View movies' properties and trailers
-- Add movies to wish list or watched movies
-- Remove movies from wish list or watched movies
+- Browse popular movies and search by title, with shareable search links
+- View each movie's details, rating, genres and trailer
+- Save movies to a wish list or mark them as watched, from any page
 - Lists are saved in the browser, so they persist across visits
-- User-friendly and responsive interface
+- Dark, responsive design that works on phones and desktops
+- Keyboard and screen reader friendly
 
 ## Technologies Used
 
@@ -21,7 +20,6 @@ This repository contains the source code for a web application that allows users
 - JavaScript
 - React
 - Vite
-- Bootstrap
 - Axios for API calls
 - Vercel Functions for the API proxy
 - [The Movie Database (TMDB) API](https://www.themoviedb.org/documentation/api)

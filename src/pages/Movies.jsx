@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { fetchPopularMovies, fetchMovieQuery } from '../components/api';
+import EmptyState from '../components/EmptyState';
+import Loading from '../components/Loading';
 import MovieGrid from '../components/MovieGrid';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const SEARCH_DELAY_MS = 400; // how long to wait after the last keystroke before searching
 
@@ -61,39 +64,63 @@ function Movies(listProps) {
     setInputValue(event.target.value);
   };
 
+  const handleSubmit = (event) => {
+    // pressing Enter searches straight away instead of waiting for the pause
+    event.preventDefault();
+    const trimmed = inputValue.trim();
+    if (trimmed !== query) setSearchParams(trimmed ? { q: trimmed } : {}, { replace: true });
+  };
+
+  const pageTitle = query ? `Results for “${query}”` : 'Popular movies';
+  useDocumentTitle(pageTitle);
+
+  // tells screen reader users how many results arrived, since they can't see the grid change
+  const resultsAnnouncement =
+    !loading && !error && query ? `Showing ${movies.length} ${movies.length === 1 ? 'result' : 'results'}` : '';
+
   // decide what to show under the heading, keeping the search bar on screen in every case
   let content;
   if (loading) {
-    content = (
-      <div className="loading">
-        Loading<span className="dot">.</span>
-        <span className="dot">.</span>
-        <span className="dot">.</span>
-      </div>
-    );
+    content = <Loading />;
   } else if (error) {
-    content = <div className="error">{error}</div>;
+    content = (
+      <p className="status-message error" role="alert">
+        {error}
+      </p>
+    );
   } else if (movies.length === 0) {
-    content = <p>{query ? `No movies found for "${query}".` : 'No movies to show right now.'}</p>;
+    content = (
+      <EmptyState icon="fa-magnifying-glass" title={query ? `No movies found for “${query}”` : 'No movies to show'}>
+        {query && <p>Check the spelling or try a different title.</p>}
+      </EmptyState>
+    );
   } else {
     content = <MovieGrid movies={movies} {...listProps} />;
   }
 
   return (
-    <div className="movies-page">
+    <div className="page movies-page">
+      <h1 className="page-title">{pageTitle}</h1>
+
       {/* Search bar */}
-      <div className="search-bar-container">
-        <i className="fas fa-search search-icon"></i>
+      <form className="search-bar-container" role="search" onSubmit={handleSubmit}>
+        <label htmlFor="movie-search" className="visually-hidden">
+          Search movies
+        </label>
+        <i className="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
         <input
-          type="text"
+          id="movie-search"
+          type="search"
           className="search-bar"
           placeholder="Search movies..."
           value={inputValue}
           onChange={handleSearch}
         />
-      </div>
+      </form>
 
-      <h1>Movies</h1>
+      <p className="visually-hidden" role="status">
+        {resultsAnnouncement}
+      </p>
       {content}
     </div>
   );
