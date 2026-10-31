@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchMovieDetails } from '../components/api';
 import { useParams } from 'react-router-dom';
 import ListToggles from '../components/ListToggles';
+import Loading from '../components/Loading';
 import { formatReleaseDate } from '../utils/formatReleaseDate';
 import { formatRuntime } from '../utils/formatRuntime';
 import { isInList } from '../utils/lists';
@@ -41,11 +42,9 @@ function MovieDetail({ wishList, watchedMovies, onToggleWishList, onToggleWatche
 
   if (loading)
     return (
-      // show a loading message while fetching
-      <div className="page loading">
-        Loading<span className="dot">.</span>
-        <span className="dot">.</span>
-        <span className="dot">.</span>
+      // show the loading animation while fetching
+      <div className="page">
+        <Loading />
       </div>
     );
   if (error) return <p className="page status-message error">{error}</p>; // show a message when an error occurs

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { fetchPopularMovies, fetchMovieQuery } from '../components/api';
 import EmptyState from '../components/EmptyState';
+import Loading from '../components/Loading';
 import MovieGrid from '../components/MovieGrid';
 
 const SEARCH_DELAY_MS = 400; // how long to wait after the last keystroke before searching
@@ -65,13 +66,7 @@ function Movies(listProps) {
   // decide what to show under the heading, keeping the search bar on screen in every case
   let content;
   if (loading) {
-    content = (
-      <div className="loading">
-        Loading<span className="dot">.</span>
-        <span className="dot">.</span>
-        <span className="dot">.</span>
-      </div>
-    );
+    content = <Loading />;
   } else if (error) {
     content = <p className="status-message error">{error}</p>;
   } else if (movies.length === 0) {
