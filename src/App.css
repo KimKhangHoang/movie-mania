@@ -168,10 +168,19 @@
     border-color 0.2s ease;
 }
 
-.card:hover {
+/* keyboard users get the same lift as mouse users when focus is inside the card */
+.card:hover,
+.card:focus-within {
   transform: translateY(-4px);
   border-color: var(--color-border-strong);
   box-shadow: var(--shadow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover,
+  .card:focus-within {
+    transform: none;
+  }
 }
 
 /* the link grows to fill the card, so the buttons line up at the bottom even when titles wrap */
@@ -181,6 +190,12 @@
   flex-direction: column;
   color: inherit;
   text-decoration: none;
+}
+
+/* the card clips anything outside it, so draw the focus ring just inside the edge */
+.card-link:focus-visible {
+  outline-offset: -3px;
+  border-radius: var(--radius) var(--radius) 0 0;
 }
 
 .card-poster {

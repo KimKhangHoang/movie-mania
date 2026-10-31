@@ -2,9 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import EmptyState from '../components/EmptyState';
 import MovieGrid from '../components/MovieGrid';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const WishList = (listProps) => {
   const { wishList } = listProps;
+  useDocumentTitle('Wish list');
 
   return (
     <div className="page wishlist-page">

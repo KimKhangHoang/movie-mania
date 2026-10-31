@@ -2,9 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import EmptyState from '../components/EmptyState';
 import MovieGrid from '../components/MovieGrid';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 function WatchedMovies(listProps) {
   const { watchedMovies } = listProps;
+  useDocumentTitle('Watched movies');
 
   return (
     <div className="page watched-movies-page">

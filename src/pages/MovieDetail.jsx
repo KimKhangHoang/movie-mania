@@ -3,6 +3,7 @@ import { fetchMovieDetails } from '../components/api';
 import { useParams } from 'react-router-dom';
 import ListToggles from '../components/ListToggles';
 import Loading from '../components/Loading';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 import { formatReleaseDate } from '../utils/formatReleaseDate';
 import { formatRuntime } from '../utils/formatRuntime';
 import { isInList } from '../utils/lists';
@@ -40,6 +41,8 @@ function MovieDetail({ wishList, watchedMovies, onToggleWishList, onToggleWatche
     getMovieData();
   }, [id]);
 
+  useDocumentTitle(movie?.title);
+
   if (loading)
     return (
       // show the loading animation while fetching
@@ -47,7 +50,13 @@ function MovieDetail({ wishList, watchedMovies, onToggleWishList, onToggleWatche
         <Loading />
       </div>
     );
-  if (error) return <p className="page status-message error">{error}</p>; // show a message when an error occurs
+  if (error)
+    return (
+      // show a message when an error occurs
+      <p className="page status-message error" role="alert">
+        {error}
+      </p>
+    );
 
   const releaseDate = formatReleaseDate(movie.release_date);
   const runtime = formatRuntime(movie.runtime);

@@ -27,6 +27,11 @@ function App() {
 
   return (
     <Router>
+      {/* lets keyboard users jump past the header straight to the page content */}
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+
       <header className="site-header">
         <Link to="/" className="brand">
           <img src="/logo.svg" alt="" width="32" height="32" />
@@ -40,15 +45,23 @@ function App() {
             Movies
           </NavLink>
           <NavLink to="/wish-list" className="nav-link">
-            Wish list <span className="nav-count">{wishList.length}</span>
+            Wish list{' '}
+            <span className="nav-count">
+              {wishList.length}
+              <span className="visually-hidden"> movies</span>
+            </span>
           </NavLink>
           <NavLink to="/watched-movies" className="nav-link">
-            Watched <span className="nav-count">{watchedMovies.length}</span>
+            Watched{' '}
+            <span className="nav-count">
+              {watchedMovies.length}
+              <span className="visually-hidden"> movies</span>
+            </span>
           </NavLink>
         </nav>
       </header>
 
-      <main className="content">
+      <main id="main-content" className="content" tabIndex={-1}>
         <Routes>
           <Route path="/" element={<Movies {...listProps} />} />
           <Route path="/wish-list" element={<WishList {...listProps} />} />
