@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { fetchPopularMovies, fetchMovieQuery } from '../components/api';
+import { fetchMovieList, fetchMovieQuery } from '../components/api';
+import BrowseTabs from '../components/BrowseTabs';
 import EmptyState from '../components/EmptyState';
 import Loading from '../components/Loading';
 import MovieGrid from '../components/MovieGrid';
 import useDocumentTitle from '../hooks/useDocumentTitle';
+import { BROWSE_LISTS, DEFAULT_LIST } from '../utils/browseLists';
 
 const SEARCH_DELAY_MS = 400; // how long to wait after the last keystroke before searching
 const MAX_LOADED_PAGES = 8; // "Load more" stops after this many pages (160 movies), so the page stays light
@@ -15,9 +17,24 @@ const addNewMovies = (shown, more) => {
   return [...shown, ...more.filter((movie) => !shownIds.has(movie.id))];
 };
 
+// updates the search in the URL while keeping the other settings, like the list being browsed
+const withSearch = (params, text) => {
+  const next = new URLSearchParams(params);
+  if (text) next.set('q', text);
+  else next.delete('q');
+  return next;
+};
+
+// fetches a page of search results, or of the list being browsed when there's no search
+const fetchMoviesPage = (query, listKey, page) =>
+  query ? fetchMovieQuery(query, page) : fetchMovieList(listKey, page);
+
 function Movies(listProps) {
   const [searchParams, setSearchParams] = useSearchParams(); // the search lives in the URL (?q=...) so it survives navigation
   const query = searchParams.get('q') ?? ''; // the search currently applied
+  const listParam = searchParams.get('list');
+  const listKey = BROWSE_LISTS[listParam] ? listParam : DEFAULT_LIST; // the list being browsed when not searching
+  const requestKey = `${query}|${listKey}`; // identifies which movies are showing
   const [inputValue, setInputValue] = useState(query); // what is typed in the search bar, updated on every keystroke
   const [lastQuery, setLastQuery] = useState(query); // the query seen on the previous render
   const [movies, setMovies] = useState([]); // a state to store the movies to show
@@ -27,7 +44,7 @@ function Movies(listProps) {
   const [totalPages, setTotalPages] = useState(1); // how many pages TMDB has for this list
   const [loadingMore, setLoadingMore] = useState(false); // a state to track the "Load more" button
   const [loadMoreError, setLoadMoreError] = useState(null); // a state for a failed "Load more"
-  const latestQuery = useRef(query); // lets "Load more" check the search hasn't changed while it was loading
+  const latestRequest = useRef(requestKey); // lets "Load more" check the search or list hasn't changed while it was loading
 
   useEffect(() => {
     // apply the search once typing pauses, instead of sending a request on every keystroke
@@ -35,7 +52,7 @@ function Movies(listProps) {
     if (trimmed === query) return;
 
     const timer = setTimeout(() => {
-      setSearchParams(trimmed ? { q: trimmed } : {}, { replace: true }); // replace, so each search doesn't add a history entry
+      setSearchParams((params) => withSearch(params, trimmed), { replace: true }); // replace, so each search doesn't add a history entry
     }, SEARCH_DELAY_MS);
     return () => clearTimeout(timer); // a new keystroke cancels the pending search
   }, [inputValue, query, setSearchParams]);
@@ -48,7 +65,7 @@ function Movies(listProps) {
 
   useEffect(() => {
     let ignore = false; // set when a newer search starts, so a slower older response can't overwrite its results
-    latestQuery.current = query;
+    latestRequest.current = requestKey;
 
     const getMovies = async () => {
       // an async function to fetch and store the first page of movies
@@ -58,7 +75,7 @@ function Movies(listProps) {
       setLoadMoreError(null);
 
       try {
-        const result = query ? await fetchMovieQuery(query) : await fetchPopularMovies();
+        const result = await fetchMoviesPage(query, listKey, 1);
         if (!ignore) {
           setMovies(result.movies); // store movies
           setPage(1);
@@ -76,7 +93,7 @@ function Movies(listProps) {
     return () => {
       ignore = true;
     };
-  }, [query]);
+  }, [query, listKey, requestKey]);
 
   const handleSearch = (event) => {
     // handle search query changes
@@ -86,22 +103,22 @@ function Movies(listProps) {
   const handleLoadMore = async () => {
     // fetch the next page and add it below the movies already showing
     if (loadingMore) return; // ignore extra clicks while a page is loading
-    const requestedQuery = query;
+    const requested = requestKey;
     const nextPage = page + 1;
     setLoadingMore(true);
     setLoadMoreError(null);
 
     try {
-      const result = query ? await fetchMovieQuery(query, nextPage) : await fetchPopularMovies(nextPage);
-      if (latestQuery.current !== requestedQuery) return; // the search changed while this page was loading
+      const result = await fetchMoviesPage(query, listKey, nextPage);
+      if (latestRequest.current !== requested) return; // the search or list changed while this page was loading
       setMovies((shown) => addNewMovies(shown, result.movies));
       setPage(nextPage);
       setTotalPages(result.totalPages);
     } catch (error) {
-      if (latestQuery.current === requestedQuery) setLoadMoreError("Couldn't load more movies. Please try again.");
+      if (latestRequest.current === requested) setLoadMoreError("Couldn't load more movies. Please try again.");
       console.error('Error loading more movies: ', error);
     } finally {
-      if (latestQuery.current === requestedQuery) setLoadingMore(false);
+      if (latestRequest.current === requested) setLoadingMore(false);
     }
   };
 
@@ -109,10 +126,10 @@ function Movies(listProps) {
     // pressing Enter searches straight away instead of waiting for the pause
     event.preventDefault();
     const trimmed = inputValue.trim();
-    if (trimmed !== query) setSearchParams(trimmed ? { q: trimmed } : {}, { replace: true });
+    if (trimmed !== query) setSearchParams((params) => withSearch(params, trimmed), { replace: true });
   };
 
-  const pageTitle = query ? `Results for “${query}”` : 'Popular movies';
+  const pageTitle = query ? `Results for “${query}”` : BROWSE_LISTS[listKey].title;
   useDocumentTitle(pageTitle);
 
   // tells screen reader users how many movies are showing after a search or "Load more", since they can't see the grid change
@@ -191,6 +208,9 @@ function Movies(listProps) {
           onChange={handleSearch}
         />
       </form>
+
+      {/* searching replaces the lists, so the tabs only show while browsing */}
+      {!query && <BrowseTabs activeList={listKey} />}
 
       <p className="visually-hidden" role="status">
         {resultsAnnouncement}

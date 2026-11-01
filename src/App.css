@@ -140,6 +140,39 @@
   box-shadow: 0 0 0 3px rgba(245, 185, 66, 0.25);
 }
 
+/* ---------- Browse tabs ---------- */
+
+/* underlined rather than filled, so they don't compete with the header's active link */
+.browse-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 1.25rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.browse-tab {
+  margin-bottom: -1px;
+  padding: 0.6rem 0.25rem;
+  border-bottom: 2px solid transparent;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+
+.browse-tab:hover {
+  color: var(--color-text);
+}
+
+.browse-tab[aria-current='page'] {
+  color: var(--color-text);
+  border-bottom-color: var(--color-accent);
+}
+
 /* ---------- Movie grid and cards ---------- */
 
 /* as many columns as fit, two on a typical phone */

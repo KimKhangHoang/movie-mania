@@ -4,7 +4,7 @@
 
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 
-const ALLOWED_PATHS = [/^movie\/popular$/, /^movie\/\d+$/, /^search\/movie$/];
+const ALLOWED_PATHS = [/^discover\/movie$/, /^trending\/movie\/week$/, /^movie\/\d+$/, /^search\/movie$/];
 
 export async function GET(request) {
   const apiKey = process.env.TMDB_API_KEY;
