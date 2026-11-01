@@ -6,7 +6,8 @@ A web app for browsing movies, watching trailers, and keeping track of what you 
 
 ## Features
 
-- Browse popular movies and search by title, with shareable search links
+- Browse popular, trending, top rated and upcoming movies, filtered by genre
+- Search by title, with shareable links for searches and filtered lists
 - View each movie's details, rating, genres and trailer
 - Save movies to a wish list or mark them as watched, from any page
 - Lists are saved in the browser, so they persist across visits
