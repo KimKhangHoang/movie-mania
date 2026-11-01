@@ -4,10 +4,16 @@ import axios from 'axios';
 // Errors are passed on to the caller, so each page can decide how to show them.
 const tmdbGet = (path, params = {}) => axios.get('/api/tmdb', { params: { path, ...params } });
 
-export const fetchPopularMovies = async () => {
-  // fetch a list of popular movies
-  const response = await tmdbGet('movie/popular');
-  return response.data.results; // return the list of movies
+// TMDB never serves more than 500 pages of a list, even when it reports more
+const MAX_PAGES = 500;
+
+// one page of a movie list, plus how many pages there are in total
+const toMoviePage = (data) => ({ movies: data.results, totalPages: Math.min(data.total_pages, MAX_PAGES) });
+
+export const fetchPopularMovies = async (page = 1) => {
+  // fetch a page of popular movies
+  const response = await tmdbGet('movie/popular', { page });
+  return toMoviePage(response.data);
 };
 
 export const fetchMovieDetails = async (id) => {
@@ -18,8 +24,8 @@ export const fetchMovieDetails = async (id) => {
   return response.data; // return the movie details
 };
 
-export const fetchMovieQuery = async (query) => {
-  // fetch a list of movies based on the query
-  const response = await tmdbGet('search/movie', { query });
-  return response.data.results;
+export const fetchMovieQuery = async (query, page = 1) => {
+  // fetch a page of movies matching the query
+  const response = await tmdbGet('search/movie', { query, page });
+  return toMoviePage(response.data);
 };
