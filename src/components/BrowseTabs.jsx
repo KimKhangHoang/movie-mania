@@ -1,14 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BROWSE_LISTS, DEFAULT_LIST } from '../utils/browseLists';
+import { BROWSE_LISTS, browseUrl } from '../utils/browseLists';
 
 // Tabs for switching between the movie lists. They're links, so each list has its own shareable URL.
-const BrowseTabs = ({ activeList }) => (
+// The chosen genre carries over to lists that can be filtered by genre.
+const BrowseTabs = ({ activeList, activeGenre }) => (
   <nav className="browse-tabs" aria-label="Movie lists">
     {Object.entries(BROWSE_LISTS).map(([key, list]) => (
       <Link
         key={key}
-        to={key === DEFAULT_LIST ? '/' : `/?list=${key}`}
+        to={browseUrl(key, list.hasGenres ? activeGenre : null)}
         className="browse-tab"
         aria-current={key === activeList ? 'page' : undefined}
       >

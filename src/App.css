@@ -173,6 +173,55 @@
   border-bottom-color: var(--color-accent);
 }
 
+/* ---------- Genre filter ---------- */
+
+.genre-filter {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  padding: 0.25rem 0;
+}
+
+/* on phones the chips scroll sideways instead of taking up several lines */
+@media (max-width: 40rem) {
+  .genre-filter {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    margin-inline: calc(-1 * var(--page-padding));
+    padding-inline: var(--page-padding);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+}
+
+.genre-chip {
+  flex: 0 0 auto;
+  padding: 0.35rem 0.85rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition:
+    color 0.2s,
+    border-color 0.2s,
+    background-color 0.2s;
+}
+
+.genre-chip:hover {
+  color: var(--color-text);
+  border-color: var(--color-border-strong);
+}
+
+.genre-chip[aria-current='page'] {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+  background-color: rgba(245, 185, 66, 0.12);
+}
+
 /* ---------- Movie grid and cards ---------- */
 
 /* as many columns as fit, two on a typical phone */

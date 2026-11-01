@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { fetchMovieList, fetchMovieQuery } from '../components/api';
+import { fetchGenres, fetchMovieList, fetchMovieQuery } from '../components/api';
 import BrowseTabs from '../components/BrowseTabs';
 import EmptyState from '../components/EmptyState';
+import GenreFilter from '../components/GenreFilter';
 import Loading from '../components/Loading';
 import MovieGrid from '../components/MovieGrid';
 import useDocumentTitle from '../hooks/useDocumentTitle';
@@ -26,15 +27,18 @@ const withSearch = (params, text) => {
 };
 
 // fetches a page of search results, or of the list being browsed when there's no search
-const fetchMoviesPage = (query, listKey, page) =>
-  query ? fetchMovieQuery(query, page) : fetchMovieList(listKey, page);
+const fetchMoviesPage = (query, listKey, genreId, page) =>
+  query ? fetchMovieQuery(query, page) : fetchMovieList(listKey, page, genreId);
 
 function Movies(listProps) {
   const [searchParams, setSearchParams] = useSearchParams(); // the search lives in the URL (?q=...) so it survives navigation
   const query = searchParams.get('q') ?? ''; // the search currently applied
   const listParam = searchParams.get('list');
   const listKey = BROWSE_LISTS[listParam] ? listParam : DEFAULT_LIST; // the list being browsed when not searching
-  const requestKey = `${query}|${listKey}`; // identifies which movies are showing
+  const listHasGenres = BROWSE_LISTS[listKey].hasGenres;
+  const genreParam = searchParams.get('genre') ?? '';
+  const genreId = listHasGenres && /^\d+$/.test(genreParam) ? genreParam : null; // ignored on lists that can't filter by genre
+  const requestKey = `${query}|${listKey}|${genreId}`; // identifies which movies are showing
   const [inputValue, setInputValue] = useState(query); // what is typed in the search bar, updated on every keystroke
   const [lastQuery, setLastQuery] = useState(query); // the query seen on the previous render
   const [movies, setMovies] = useState([]); // a state to store the movies to show
@@ -44,6 +48,7 @@ function Movies(listProps) {
   const [totalPages, setTotalPages] = useState(1); // how many pages TMDB has for this list
   const [loadingMore, setLoadingMore] = useState(false); // a state to track the "Load more" button
   const [loadMoreError, setLoadMoreError] = useState(null); // a state for a failed "Load more"
+  const [genres, setGenres] = useState([]); // genre names for the filter, empty until loaded
   const latestRequest = useRef(requestKey); // lets "Load more" check the search or list hasn't changed while it was loading
 
   useEffect(() => {
@@ -56,6 +61,13 @@ function Movies(listProps) {
     }, SEARCH_DELAY_MS);
     return () => clearTimeout(timer); // a new keystroke cancels the pending search
   }, [inputValue, query, setSearchParams]);
+
+  useEffect(() => {
+    // load the genre names once, for the genre filter
+    fetchGenres()
+      .then(setGenres)
+      .catch((error) => console.error('Error loading genres: ', error)); // the page still works, just without the filter
+  }, []);
 
   // keep the search bar in step when the URL changes elsewhere, e.g. the Movies link or the back button
   if (query !== lastQuery) {
@@ -75,7 +87,7 @@ function Movies(listProps) {
       setLoadMoreError(null);
 
       try {
-        const result = await fetchMoviesPage(query, listKey, 1);
+        const result = await fetchMoviesPage(query, listKey, genreId, 1);
         if (!ignore) {
           setMovies(result.movies); // store movies
           setPage(1);
@@ -93,7 +105,7 @@ function Movies(listProps) {
     return () => {
       ignore = true;
     };
-  }, [query, listKey, requestKey]);
+  }, [query, listKey, genreId, requestKey]);
 
   const handleSearch = (event) => {
     // handle search query changes
@@ -109,7 +121,7 @@ function Movies(listProps) {
     setLoadMoreError(null);
 
     try {
-      const result = await fetchMoviesPage(query, listKey, nextPage);
+      const result = await fetchMoviesPage(query, listKey, genreId, nextPage);
       if (latestRequest.current !== requested) return; // the search or list changed while this page was loading
       setMovies((shown) => addNewMovies(shown, result.movies));
       setPage(nextPage);
@@ -129,7 +141,10 @@ function Movies(listProps) {
     if (trimmed !== query) setSearchParams((params) => withSearch(params, trimmed), { replace: true });
   };
 
-  const pageTitle = query ? `Results for “${query}”` : BROWSE_LISTS[listKey].title;
+  // e.g. "Top rated Drama movies" when a genre is chosen, once the genre names have loaded
+  const genreName = genres.find((genre) => String(genre.id) === genreId)?.name;
+  const listTitle = genreName ? `${BROWSE_LISTS[listKey].label} ${genreName} movies` : BROWSE_LISTS[listKey].title;
+  const pageTitle = query ? `Results for “${query}”` : listTitle;
   useDocumentTitle(pageTitle);
 
   // tells screen reader users how many movies are showing after a search or "Load more", since they can't see the grid change
@@ -153,6 +168,7 @@ function Movies(listProps) {
     content = (
       <EmptyState icon="fa-magnifying-glass" title={query ? `No movies found for “${query}”` : 'No movies to show'}>
         {query && <p>Check the spelling or try a different title.</p>}
+        {!query && genreId && <p>Try a different genre.</p>}
       </EmptyState>
     );
   } else {
@@ -210,7 +226,10 @@ function Movies(listProps) {
       </form>
 
       {/* searching replaces the lists, so the tabs only show while browsing */}
-      {!query && <BrowseTabs activeList={listKey} />}
+      {!query && <BrowseTabs activeList={listKey} activeGenre={genreId} />}
+      {!query && listHasGenres && genres.length > 0 && (
+        <GenreFilter listKey={listKey} genres={genres} activeGenre={genreId} />
+      )}
 
       <p className="visually-hidden" role="status">
         {resultsAnnouncement}
