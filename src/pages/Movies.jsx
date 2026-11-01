@@ -7,6 +7,7 @@ import MovieGrid from '../components/MovieGrid';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const SEARCH_DELAY_MS = 400; // how long to wait after the last keystroke before searching
+const MAX_LOADED_PAGES = 8; // "Load more" stops after this many pages (160 movies), so the page stays light
 
 // TMDB's pages can overlap when rankings shift between requests, so skip movies that are already shown
 const addNewMovies = (shown, more) => {
@@ -142,8 +143,13 @@ function Movies(listProps) {
       <>
         <MovieGrid movies={movies} {...listProps} />
 
-        {/* hidden once every page has been loaded */}
-        {page < totalPages && (
+        {/* past the cap, suggest searching instead of loading ever more movies */}
+        {page >= MAX_LOADED_PAGES && page < totalPages && (
+          <p className="list-end-note">You&apos;ve reached the end of this list. Search for a title to find more.</p>
+        )}
+
+        {/* hidden once every page has been loaded, or the cap is reached */}
+        {page < Math.min(totalPages, MAX_LOADED_PAGES) && (
           <div className="load-more">
             {loadMoreError && (
               <p className="error" role="alert">

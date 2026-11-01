@@ -350,6 +350,12 @@
   margin-top: 2.5rem;
 }
 
+.list-end-note {
+  margin-top: 2.5rem;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
 .load-more-button {
   min-width: 10rem;
   padding: 0.75rem 2rem;
