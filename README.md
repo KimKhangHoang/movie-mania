@@ -2,7 +2,7 @@
 
 A web app for browsing movies, watching trailers, and keeping track of what you want to see and what you've already watched.
 
-**Live demo:** [movie-mania-roan-three.vercel.app](https://movie-mania-roan-three.vercel.app)
+**Live demo:** [kimkhanghoang-moviemania.vercel.app](https://kimkhanghoang-moviemania.vercel.app)
 
 ## Features
 
