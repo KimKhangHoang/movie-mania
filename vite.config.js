@@ -24,7 +24,7 @@ function tmdbProxyLocal() {
 
 export default defineConfig(({ mode }) => {
   // Give the local proxy the key from .env. It isn't VITE_-prefixed, so it never ends up in the client bundle.
-  process.env.TMDB_API_KEY ??= loadEnv(mode, process.cwd(), '').TMDB_API_KEY;
+  process.env.TMDB_API_KEY ??= loadEnv(mode, process.cwd(), '').TMDB_API_KEY ?? '';
 
   return {
     plugins: [react(), tmdbProxyLocal()],
