@@ -28,5 +28,10 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react(), tmdbProxyLocal()],
+    // Vitest runs tests in jsdom, a simulated browser, so they don't need a real one
+    test: {
+      environment: 'jsdom',
+      setupFiles: './src/setupTests.js',
+    },
   };
 });
