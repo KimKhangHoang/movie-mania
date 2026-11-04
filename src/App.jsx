@@ -48,14 +48,14 @@ function App() {
             Wish list{' '}
             <span className="nav-count">
               {wishList.length}
-              <span className="visually-hidden"> movies</span>
+              <span className="visually-hidden"> {wishList.length === 1 ? 'movie' : 'movies'}</span>
             </span>
           </NavLink>
           <NavLink to="/watched-movies" className="nav-link">
             Watched{' '}
             <span className="nav-count">
               {watchedMovies.length}
-              <span className="visually-hidden"> movies</span>
+              <span className="visually-hidden"> {watchedMovies.length === 1 ? 'movie' : 'movies'}</span>
             </span>
           </NavLink>
         </nav>

@@ -1,5 +1,7 @@
 # MovieMania
 
+[![CI](https://github.com/KimKhangHoang/movie-mania/actions/workflows/ci.yml/badge.svg)](https://github.com/KimKhangHoang/movie-mania/actions/workflows/ci.yml)
+
 A web app for browsing movies, watching trailers, and keeping track of what you want to see and what you've already watched.
 
 **Live demo:** [kimkhanghoang-moviemania.vercel.app](https://kimkhanghoang-moviemania.vercel.app)
@@ -23,6 +25,7 @@ A web app for browsing movies, watching trailers, and keeping track of what you 
 - Vite
 - Axios for API calls
 - Vercel Functions for the API proxy
+- Vitest and React Testing Library for tests
 - [The Movie Database (TMDB) API](https://www.themoviedb.org/documentation/api)
 
 ## How the TMDB API key is kept private
@@ -52,6 +55,9 @@ Other scripts:
 - `npm run preview` serves the production build locally, including the API proxy
 - `npm run lint` checks the code with Oxlint
 - `npm run format` formats the code with Prettier
+- `npm test` runs the tests, using made-up data so no API key is needed
+
+GitHub Actions runs the lint, tests and build on every pull request and push to `main`.
 
 ## Deployment
 
