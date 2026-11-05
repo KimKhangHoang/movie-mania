@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fetchGenres, fetchMovieList } from './api';
+import { fetchGenres, fetchMovieDetails, fetchMovieList } from './api';
 
 vi.mock('axios');
 
@@ -31,6 +31,20 @@ describe('fetchMovieList', () => {
     const { totalPages } = await fetchMovieList('popular');
 
     expect(totalPages).toBe(500);
+  });
+});
+
+describe('fetchMovieDetails', () => {
+  it('asks for the trailer, cast and related movies in one request', async () => {
+    axios.get.mockReset();
+    axios.get.mockResolvedValue({ data: { id: 1 } });
+
+    await fetchMovieDetails(1);
+
+    expect(axios.get).toHaveBeenCalledTimes(1);
+    expect(axios.get).toHaveBeenCalledWith('/api/tmdb', {
+      params: { path: 'movie/1', append_to_response: 'videos,credits,recommendations' },
+    });
   });
 });
 
