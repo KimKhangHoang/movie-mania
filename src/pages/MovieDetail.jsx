@@ -15,10 +15,18 @@ function MovieDetail({ wishList, watchedMovies, onToggleWishList, onToggleWatche
   const [error, setError] = useState(null); // a state for error detection
 
   useEffect(() => {
+    let ignore = false; // set when another movie is opened, so a slower older response can't overwrite it
+    window.scrollTo(0, 0); // opening a related movie stays on this page, so start the new one from the top
+
     const getMovieData = async () => {
       // an async function to fetch and store a movie details
+      setLoading(true);
+      setError(null); // clear any previous errors
+      setMovie(null);
+
       try {
         const movieDetails = await fetchMovieDetails(id); // fetch the movie details from the API
+        if (ignore) return;
 
         const trailerData = movieDetails.videos?.results.find(
           // extract trailer info from video data
@@ -31,14 +39,17 @@ function MovieDetail({ wishList, watchedMovies, onToggleWishList, onToggleWatche
           trailer: trailerData ? { key: trailerData.key } : null, // if exist then .key of YouTube videos, if not then null
         });
       } catch (error) {
-        setError("Couldn't load this movie. It may not exist, or the connection failed.");
+        if (!ignore) setError("Couldn't load this movie. It may not exist, or the connection failed.");
         console.error('Error in movie detail page: ', error);
       } finally {
-        setLoading(false); // set loading status to false once movies are fetched
+        if (!ignore) setLoading(false); // set loading status to false once movies are fetched
       }
     };
 
     getMovieData();
+    return () => {
+      ignore = true;
+    };
   }, [id]);
 
   useDocumentTitle(movie?.title);
