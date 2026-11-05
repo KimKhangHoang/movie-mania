@@ -35,7 +35,7 @@ describe('fetchMovieList', () => {
 });
 
 describe('fetchMovieDetails', () => {
-  it('asks for the trailer, cast and related movies in one request', async () => {
+  it('asks for the trailer, cast, related movies and where to watch in one request', async () => {
     axios.get.mockReset();
     axios.get.mockResolvedValue({ data: { id: 1 } });
 
@@ -43,7 +43,7 @@ describe('fetchMovieDetails', () => {
 
     expect(axios.get).toHaveBeenCalledTimes(1);
     expect(axios.get).toHaveBeenCalledWith('/api/tmdb', {
-      params: { path: 'movie/1', append_to_response: 'videos,credits,recommendations' },
+      params: { path: 'movie/1', append_to_response: 'videos,credits,recommendations,watch/providers' },
     });
   });
 });

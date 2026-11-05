@@ -5,6 +5,7 @@ import CastList from '../components/CastList';
 import ListToggles from '../components/ListToggles';
 import Loading from '../components/Loading';
 import MovieGrid from '../components/MovieGrid';
+import WatchProviders from '../components/WatchProviders';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 import { formatReleaseDate } from '../utils/formatReleaseDate';
 import { formatRuntime } from '../utils/formatRuntime';
@@ -149,6 +150,8 @@ function MovieDetail(listProps) {
           </div>
         </div>
       </section>
+
+      <WatchProviders providers={movie['watch/providers']?.results.AU} />
 
       {movie.trailer && (
         <section className="page detail-section">
