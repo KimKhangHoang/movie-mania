@@ -11,6 +11,7 @@ A web app for browsing movies, watching trailers, and keeping track of what you 
 - Browse popular, trending, top rated and upcoming movies, filtered by genre
 - Search by title, with shareable links for searches and filtered lists
 - View each movie's details, rating, genres, trailer, cast and related movies
+- See where each movie can be streamed, rented or bought in Australia
 - Save movies to a wish list or mark them as watched, from any page
 - Lists are saved in the browser, so they persist across visits
 - Dark, responsive design that works on phones and desktops
@@ -68,3 +69,5 @@ Import the repository into Vercel, which detects Vite automatically, and add `TM
 ## Attribution
 
 This product uses the TMDB API but is not endorsed or certified by TMDB.
+
+Streaming, rental and purchase data is provided by [JustWatch](https://www.justwatch.com/au).
