@@ -81,6 +81,42 @@ describe('Movie detail page', () => {
     expect(screen.queryByRole('heading', { name: 'More like this' })).not.toBeInTheDocument();
   });
 
+  it('shows the ways to watch in Australia, with the required JustWatch credit', async () => {
+    const provider = (provider_id, provider_name) => ({ provider_id, provider_name, logo_path: `/${provider_id}.png` });
+    const results = {
+      US: { link: 'https://tmdb.example/us', flatrate: [provider(9, 'Only in the US')] },
+      AU: {
+        link: 'https://tmdb.example/au',
+        flatrate: [provider(1, 'Netflix'), provider(2, 'Netflix Standard with Ads')],
+        ads: [], // a way to watch with no services shouldn't leave an empty heading
+        rent: [provider(3, 'YouTube')],
+      },
+    };
+    fetchMovieDetails.mockResolvedValue(movieDetails(1, 'Inception', { 'watch/providers': { results } }));
+    render(<App />);
+
+    const heading = await screen.findByRole('heading', { level: 2, name: 'Where to watch in Australia' });
+    const section = within(heading.closest('section'));
+
+    expect(section.getAllByRole('heading', { level: 3 }).map((title) => title.textContent)).toEqual(['Stream', 'Rent']);
+    expect(section.getAllByRole('listitem').map((item) => item.textContent)).toEqual(['Netflix', 'YouTube']);
+    expect(section.getByRole('link', { name: /See how to watch on TMDB/ })).toHaveAttribute(
+      'href',
+      'https://tmdb.example/au',
+    );
+    expect(section.getByRole('link', { name: /JustWatch/ })).toBeInTheDocument();
+  });
+
+  it('says when there is nowhere to watch in Australia, and still credits JustWatch', async () => {
+    const results = { US: { link: 'https://tmdb.example/us', flatrate: [] } };
+    fetchMovieDetails.mockResolvedValue(movieDetails(1, 'Inception', { 'watch/providers': { results } }));
+    render(<App />);
+
+    expect(await screen.findByText(/no streaming, rental or purchase options/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /JustWatch/ })).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /See how to watch on TMDB/ })).not.toBeInTheDocument();
+  });
+
   it('lets you save a related movie and shows its title under the section heading', async () => {
     const user = userEvent.setup();
     const results = Array.from({ length: 20 }, (_, index) => related(index + 100, `Related ${index + 1}`));

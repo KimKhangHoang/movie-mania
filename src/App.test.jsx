@@ -93,6 +93,19 @@ describe('MovieMania', () => {
     expect(screen.queryByRole('button', { name: 'Load more' })).not.toBeInTheDocument(); // that was the last page
   });
 
+  it('credits TMDB on every page, as its terms require', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const notice = 'This product uses the TMDB API but is not endorsed or certified by TMDB.';
+
+    expect(screen.getByText(notice)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /TMDB/ })).toHaveAttribute('href', 'https://www.themoviedb.org');
+
+    await user.click(screen.getByRole('link', { name: /^Wish list/ }));
+
+    expect(screen.getByText(notice)).toBeInTheDocument();
+  });
+
   it('shows an error when movies fail to load', async () => {
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {}); // the app logs the failure, which isn't useful in test output
     fetchMovieList.mockRejectedValue(new Error('network down'));

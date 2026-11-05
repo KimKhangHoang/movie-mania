@@ -37,7 +37,7 @@ export const fetchGenres = () => {
 export const fetchMovieDetails = async (id) => {
   // fetch a movie details
   const response = await tmdbGet(`movie/${id}`, {
-    append_to_response: 'videos,credits,recommendations', // include the trailer, cast and related movies in the same request
+    append_to_response: 'videos,credits,recommendations,watch/providers', // include the trailer, cast, related movies and where to watch in the same request
   });
   return response.data; // return the movie details
 };
