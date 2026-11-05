@@ -69,6 +69,14 @@ function App() {
           <Route path="/movie/:id" element={<MovieDetail {...listProps} />} />
         </Routes>
       </main>
+
+      <footer className="site-footer">
+        <a href="https://www.themoviedb.org" target="_blank" rel="noreferrer">
+          <img src="/tmdb-logo.svg" alt="TMDB" className="tmdb-logo" />
+          <span className="visually-hidden"> (opens in a new tab)</span>
+        </a>
+        <p>This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
+      </footer>
     </Router>
   );
 }
