@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { fetchMovieDetails } from '../components/api';
 import { useParams } from 'react-router-dom';
+import CastList from '../components/CastList';
 import ListToggles from '../components/ListToggles';
 import Loading from '../components/Loading';
+import MovieGrid from '../components/MovieGrid';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 import { formatReleaseDate } from '../utils/formatReleaseDate';
 import { formatRuntime } from '../utils/formatRuntime';
 import { isInList } from '../utils/lists';
 
-function MovieDetail({ wishList, watchedMovies, onToggleWishList, onToggleWatched }) {
+const MAX_CAST = 12; // the top-billed actors, since some movies list 80 or more
+const MAX_RECOMMENDATIONS = 10; // fills every row of the grid's 5 columns on desktop and 2 columns on phones
+
+function MovieDetail(listProps) {
+  const { wishList, watchedMovies, onToggleWishList, onToggleWatched } = listProps;
   const { id } = useParams(); // get the movie ID from the URL
   const [movie, setMovie] = useState(null); // a state to store movie details
   const [loading, setLoading] = useState(true); // a state to track loading status
@@ -72,6 +78,8 @@ function MovieDetail({ wishList, watchedMovies, onToggleWishList, onToggleWatche
   const releaseDate = formatReleaseDate(movie.release_date);
   const runtime = formatRuntime(movie.runtime);
   const rating = movie.vote_count > 0 ? movie.vote_average.toFixed(1) : null;
+  const cast = movie.credits?.cast.slice(0, MAX_CAST) ?? [];
+  const recommendations = movie.recommendations?.results.slice(0, MAX_RECOMMENDATIONS) ?? [];
 
   // only the fields the list pages need, so saved lists stay small
   const savedMovie = {
@@ -143,7 +151,7 @@ function MovieDetail({ wishList, watchedMovies, onToggleWishList, onToggleWatche
       </section>
 
       {movie.trailer && (
-        <section className="page detail-trailer">
+        <section className="page detail-section">
           <h2 className="section-title">Trailer</h2>
           <div className="video-frame">
             <iframe
@@ -154,6 +162,20 @@ function MovieDetail({ wishList, watchedMovies, onToggleWishList, onToggleWatche
               allowFullScreen
             />
           </div>
+        </section>
+      )}
+
+      {cast.length > 0 && (
+        <section className="page detail-section">
+          <h2 className="section-title">Cast</h2>
+          <CastList cast={cast} />
+        </section>
+      )}
+
+      {recommendations.length > 0 && (
+        <section className="page detail-section">
+          <h2 className="section-title">More like this</h2>
+          <MovieGrid movies={recommendations} headingLevel="h3" {...listProps} />
         </section>
       )}
     </article>

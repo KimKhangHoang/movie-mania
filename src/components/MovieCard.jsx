@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { formatReleaseDate } from '../utils/formatReleaseDate';
 import ListToggles from './ListToggles';
 
-const MovieCard = ({ movie, ...toggleProps }) => {
+// headingLevel keeps the page's heading order correct when a grid sits under its own section heading
+const MovieCard = ({ movie, headingLevel: Heading = 'h2', ...toggleProps }) => {
   const { id, title, release_date, poster_path } = movie;
   const releaseDate = formatReleaseDate(release_date);
 
@@ -19,7 +20,7 @@ const MovieCard = ({ movie, ...toggleProps }) => {
           </div>
         )}
         <div className="card-body">
-          <h2 className="card-title">{title}</h2>
+          <Heading className="card-title">{title}</Heading>
           <p className="card-text">{releaseDate ?? 'Release date unknown'}</p>
         </div>
       </Link>

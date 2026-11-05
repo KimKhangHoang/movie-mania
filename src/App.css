@@ -624,8 +624,13 @@
   font-weight: 700;
 }
 
-.detail-trailer {
+.detail-section {
   padding-top: 1rem;
+  padding-bottom: 1.5rem;
+}
+
+.detail-section:last-child {
+  padding-bottom: 4rem;
 }
 
 /* keeps the trailer at 16:9 at any width */
@@ -640,6 +645,42 @@
   width: 100%;
   height: 100%;
   border: 0;
+}
+
+/* scrolls sideways at every width, with a thin scrollbar as a hint that there's more to see */
+.cast-list {
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  padding: 0 0 0.75rem;
+  overflow-x: auto;
+  list-style: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-strong) transparent;
+}
+
+.cast-member {
+  flex: 0 0 8rem;
+}
+
+.cast-photo {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  vertical-align: top;
+  border-radius: var(--radius);
+  background-color: var(--color-surface-raised);
+}
+
+.cast-name {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.cast-character {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
 }
 
 /* on narrow screens the poster sits above the details */
