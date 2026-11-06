@@ -4,9 +4,11 @@ import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from '../App';
 import { fetchMovieDetails } from '../components/api';
+import { countPageView } from '../utils/analytics';
 
-// the tests use made-up movies instead of calling TMDB
+// the tests use made-up movies instead of calling TMDB, and check what would be counted without sending it
 vi.mock('../components/api');
+vi.mock('../utils/analytics');
 
 const actor = (number, overrides) => ({
   credit_id: `credit-${number}`,
@@ -146,6 +148,21 @@ describe('Movie detail page', () => {
     expect(screen.queryByRole('heading', { level: 1, name: 'Inception' })).not.toBeInTheDocument();
     expect(document.title).toBe('Dune | MovieMania');
     expect(window.scrollTo).toHaveBeenCalledTimes(2); // once for each movie opened
+    expect(countPageView.mock.calls).toEqual([
+      ['/movie/1', 'Inception'],
+      ['/movie/2', 'Dune'],
+    ]);
+  });
+
+  it("doesn't count a visit to a movie that fails to load", async () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {}); // the app logs the failure, which isn't useful in test output
+    fetchMovieDetails.mockRejectedValue(new Error('not found'));
+    render(<App />);
+
+    await screen.findByRole('alert');
+
+    expect(countPageView).not.toHaveBeenCalled();
+    consoleError.mockRestore();
   });
 
   it('ignores a slower response for the movie you just left', async () => {
