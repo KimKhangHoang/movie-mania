@@ -658,6 +658,38 @@
   border: 0;
 }
 
+/* the credit sits beside the heading, and drops below it on phones if there isn't room */
+.watch-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.watch-header .section-title {
+  margin-bottom: 0;
+}
+
+/* accent coloured because it's the only pill here you can click, unlike the services below */
+.watch-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.15rem 0.7rem;
+  border: 1px solid var(--color-accent);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+
+.watch-source:hover {
+  background-color: rgba(245, 185, 66, 0.12);
+}
+
 .watch-options {
   display: flex;
   flex-direction: column;
@@ -706,16 +738,6 @@
 
 .watch-empty {
   color: var(--color-text-muted);
-}
-
-.watch-credit {
-  margin-top: 1.25rem;
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
-}
-
-.text-link {
-  color: var(--color-accent);
 }
 
 /* scrolls sideways at every width, with a thin scrollbar as a hint that there's more to see */
