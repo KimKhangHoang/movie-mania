@@ -7,6 +7,8 @@ import GenreFilter from '../components/GenreFilter';
 import Loading from '../components/Loading';
 import MovieGrid from '../components/MovieGrid';
 import useDocumentTitle from '../hooks/useDocumentTitle';
+import usePageView from '../hooks/usePageView';
+import { countEvent } from '../utils/analytics';
 import { BROWSE_LISTS, DEFAULT_LIST } from '../utils/browseLists';
 
 const SEARCH_DELAY_MS = 400; // how long to wait after the last keystroke before searching
@@ -58,6 +60,7 @@ function Movies(listProps) {
 
     const timer = setTimeout(() => {
       setSearchParams((params) => withSearch(params, trimmed), { replace: true }); // replace, so each search doesn't add a history entry
+      if (trimmed) countEvent('search');
     }, SEARCH_DELAY_MS);
     return () => clearTimeout(timer); // a new keystroke cancels the pending search
   }, [inputValue, query, setSearchParams]);
@@ -138,7 +141,9 @@ function Movies(listProps) {
     // pressing Enter searches straight away instead of waiting for the pause
     event.preventDefault();
     const trimmed = inputValue.trim();
-    if (trimmed !== query) setSearchParams((params) => withSearch(params, trimmed), { replace: true });
+    if (trimmed === query) return;
+    setSearchParams((params) => withSearch(params, trimmed), { replace: true });
+    if (trimmed) countEvent('search');
   };
 
   // e.g. "Top rated Drama movies" when a genre is chosen, once the genre names have loaded
@@ -146,6 +151,7 @@ function Movies(listProps) {
   const listTitle = genreName ? `${BROWSE_LISTS[listKey].label} ${genreName} movies` : BROWSE_LISTS[listKey].title;
   const pageTitle = query ? `Results for “${query}”` : listTitle;
   useDocumentTitle(pageTitle);
+  usePageView('Movies'); // not pageTitle, which can contain what was searched for
 
   // tells screen reader users how many movies are showing after a search or "Load more", since they can't see the grid change
   const itemName = query ? 'result' : 'movie';

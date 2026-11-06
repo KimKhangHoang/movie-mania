@@ -7,6 +7,7 @@ import Loading from '../components/Loading';
 import MovieGrid from '../components/MovieGrid';
 import WatchProviders from '../components/WatchProviders';
 import useDocumentTitle from '../hooks/useDocumentTitle';
+import usePageView from '../hooks/usePageView';
 import { formatReleaseDate } from '../utils/formatReleaseDate';
 import { formatRuntime } from '../utils/formatRuntime';
 import { isInList } from '../utils/lists';
@@ -60,6 +61,9 @@ function MovieDetail(listProps) {
   }, [id]);
 
   useDocumentTitle(movie?.title);
+  // counted once this movie loads, so the stats show its name rather than just its ID.
+  // The ID check is for the moment after opening a related movie, when the previous movie is still in state.
+  usePageView(String(movie?.id) === id ? movie.title : null);
 
   if (loading)
     return (
