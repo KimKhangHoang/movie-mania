@@ -5,6 +5,8 @@ import Movies from './pages/Movies';
 import WishList from './pages/WishList';
 import WatchedMovies from './pages/WatchedMovies';
 import MovieDetail from './pages/MovieDetail';
+import { countEvent } from './utils/analytics';
+import { isInList } from './utils/lists';
 import './App.css';
 
 function App() {
@@ -12,17 +14,17 @@ function App() {
   const [watchedMovies, setWatchedMovies] = usePersistentState('watched-movies', []); // watched movies state, saved in the browser
 
   // returns a handler that adds a movie to a list, or removes it if it's already there
-  const toggleInList = (setList) => (movie) =>
-    setList((list) =>
-      list.some((item) => item.id === movie.id) ? list.filter((item) => item.id !== movie.id) : [...list, movie],
-    );
+  const toggleInList = (currentList, setList, addEvent) => (movie) => {
+    if (!isInList(currentList, movie)) countEvent(addEvent);
+    setList((list) => (isInList(list, movie) ? list.filter((item) => item.id !== movie.id) : [...list, movie]));
+  };
 
   // what every page needs to show and update both lists
   const listProps = {
     wishList,
     watchedMovies,
-    onToggleWishList: toggleInList(setWishList),
-    onToggleWatched: toggleInList(setWatchedMovies),
+    onToggleWishList: toggleInList(wishList, setWishList, 'add-to-wish-list'),
+    onToggleWatched: toggleInList(watchedMovies, setWatchedMovies, 'mark-as-watched'),
   };
 
   return (

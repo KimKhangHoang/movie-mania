@@ -4,9 +4,11 @@ import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import App from './App';
 import { fetchGenres, fetchMovieList, fetchMovieQuery } from './components/api';
+import { countEvent, countPageView } from './utils/analytics';
 
-// the tests use made-up movies instead of calling TMDB
+// the tests use made-up movies instead of calling TMDB, and check what would be counted without sending it
 vi.mock('./components/api');
+vi.mock('./utils/analytics');
 
 const movie = (id, title) => ({ id, title, release_date: '2010-07-16', poster_path: null });
 const moviePage = (movies, totalPages = 1) => ({ movies, totalPages });
@@ -91,6 +93,60 @@ describe('MovieMania', () => {
     expect(fetchMovieList).toHaveBeenLastCalledWith('popular', 2, null);
     expect(screen.getAllByRole('article')).toHaveLength(3);
     expect(screen.queryByRole('button', { name: 'Load more' })).not.toBeInTheDocument(); // that was the last page
+  });
+
+  it('counts a search once, without what was typed or another page view', async () => {
+    const user = userEvent.setup();
+    fetchMovieQuery.mockResolvedValue(moviePage([movie(2, 'Dune')]));
+    render(<App />);
+    await screen.findByRole('heading', { level: 2, name: 'Inception' });
+    expect(countPageView.mock.calls).toEqual([['/', 'Movies']]);
+
+    await user.type(screen.getByRole('searchbox', { name: 'Search movies' }), 'dune');
+    await screen.findByRole('heading', { level: 2, name: 'Dune' });
+
+    expect(countEvent.mock.calls).toEqual([['search']]);
+    expect(countPageView.mock.calls).toEqual([['/', 'Movies']]);
+  });
+
+  it('counts a search once when Enter is pressed before the pause', async () => {
+    const user = userEvent.setup();
+    fetchMovieQuery.mockResolvedValue(moviePage([movie(2, 'Dune')]));
+    render(<App />);
+    await screen.findByRole('heading', { level: 2, name: 'Inception' });
+
+    await user.type(screen.getByRole('searchbox', { name: 'Search movies' }), 'dune{Enter}');
+    await screen.findByRole('heading', { level: 2, name: 'Dune' });
+    await new Promise((done) => setTimeout(done, 500)); // longer than the search delay, so a second count would have happened
+
+    expect(countEvent.mock.calls).toEqual([['search']]);
+  });
+
+  it("doesn't count clearing a search, or opening a link to one", async () => {
+    const user = userEvent.setup();
+    fetchMovieQuery.mockResolvedValue(moviePage([movie(2, 'Dune')]));
+    window.history.pushState({}, '', '/?q=dune');
+    render(<App />);
+
+    const searchBox = screen.getByRole('searchbox', { name: 'Search movies' });
+    await screen.findByRole('heading', { level: 2, name: 'Dune' });
+    await user.clear(searchBox);
+    await screen.findByRole('heading', { level: 2, name: 'Inception' });
+
+    expect(countEvent).not.toHaveBeenCalled();
+    expect(countPageView.mock.calls).toEqual([['/', 'Movies']]);
+  });
+
+  it('counts movies being added to a list, but not removed', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const wishButton = await screen.findByRole('button', { name: 'Wish list, Inception' });
+    await user.click(wishButton);
+    await user.click(wishButton);
+    await user.click(screen.getByRole('button', { name: 'Watched, Inception' }));
+
+    expect(countEvent.mock.calls).toEqual([['add-to-wish-list'], ['mark-as-watched']]);
   });
 
   it('credits TMDB on every page, as its terms require', async () => {

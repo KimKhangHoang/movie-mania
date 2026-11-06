@@ -1,6 +1,10 @@
 # MovieMania
 
 [![CI](https://github.com/KimKhangHoang/movie-mania/actions/workflows/ci.yml/badge.svg)](https://github.com/KimKhangHoang/movie-mania/actions/workflows/ci.yml)
+[![Visits](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fmoviemania.goatcounter.com%2Fcounter%2FTOTAL.json&query=%24.count&label=visits&color=f5b942)](https://moviemania.goatcounter.com)
+[![Searches](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fmoviemania.goatcounter.com%2Fcounter%2Fsearch.json&query=%24.count&label=searches&color=f5b942)](https://moviemania.goatcounter.com)
+[![Added to wish list](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fmoviemania.goatcounter.com%2Fcounter%2Fadd-to-wish-list.json&query=%24.count&label=added%20to%20wish%20list&color=f5b942)](https://moviemania.goatcounter.com)
+[![Marked as watched](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fmoviemania.goatcounter.com%2Fcounter%2Fmark-as-watched.json&query=%24.count&label=marked%20as%20watched&color=f5b942)](https://moviemania.goatcounter.com)
 
 A web app for browsing movies, watching trailers, and keeping track of what you want to see and what you've already watched.
 
@@ -27,6 +31,7 @@ A web app for browsing movies, watching trailers, and keeping track of what you 
 - Axios for API calls
 - Vercel Functions for the API proxy
 - Vitest and React Testing Library for tests
+- [GoatCounter](https://www.goatcounter.com/) for visit counts
 - [The Movie Database (TMDB) API](https://www.themoviedb.org/documentation/api)
 
 ## How the TMDB API key is kept private
@@ -36,6 +41,15 @@ It calls `/api/tmdb`, a serverless function in [api/tmdb.js](api/tmdb.js) that a
 The function only allows the TMDB endpoints this app uses, and successful responses are cached on Vercel's CDN.
 
 In local development, [vite.config.js](vite.config.js) runs the same function inside the Vite dev server, so no extra tooling is needed.
+
+## Usage Stats
+
+Visits, searches and movies added to each list are counted with [GoatCounter](https://www.goatcounter.com/), which doesn't store IP addresses or other personal information.
+For searches, only the fact that one happened is recorded, never what was typed.
+To keep it that way, [analytics.js](src/utils/analytics.js) calls GoatCounter's endpoint directly with only the values it needs, instead of loading its script, which would also send the URL's query string.
+Only the live site is counted, not local development or preview deployments.
+
+The badges above update every few hours, and the full stats are public [here](https://moviemania.goatcounter.com).
 
 ## Getting Started
 

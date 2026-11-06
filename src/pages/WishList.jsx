@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom';
 import EmptyState from '../components/EmptyState';
 import MovieGrid from '../components/MovieGrid';
 import useDocumentTitle from '../hooks/useDocumentTitle';
+import usePageView from '../hooks/usePageView';
 
 const WishList = (listProps) => {
   const { wishList } = listProps;
   useDocumentTitle('Wish list');
+  usePageView('Wish list');
 
   return (
     <div className="page wishlist-page">
