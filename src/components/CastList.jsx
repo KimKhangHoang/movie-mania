@@ -14,7 +14,7 @@ const CastList = ({ cast }) => (
             loading="lazy"
           />
         ) : (
-          // not everyone has a photo on TMDB, so show a placeholder instead of a broken image
+          // Not everyone has a photo on TMDB, so show a placeholder instead of a broken image
           <div className="cast-photo poster-placeholder" aria-hidden="true">
             <i className="fa-solid fa-user"></i>
           </div>

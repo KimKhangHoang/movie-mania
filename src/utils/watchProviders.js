@@ -1,4 +1,4 @@
-// the endings TMDB adds to a service's name when it lists another plan or way of buying the same service
+// The endings TMDB adds to a service's name when it lists another plan or way of buying the same service
 const VARIANT_ENDING = /\s+(amazon channel|(standard |basic )?with ads|premium)$/i;
 
 // "Paramount+ Amazon Channel" and "Paramount Plus Premium" both become "Paramount Plus"

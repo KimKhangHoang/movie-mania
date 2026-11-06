@@ -1,4 +1,4 @@
-/* the content grows to fill the screen, so the footer stays at the bottom on short pages */
+/* The content grows to fill the screen, so the footer stays at the bottom on short pages */
 #root {
   display: flex;
   flex-direction: column;
@@ -76,7 +76,7 @@
   background-color: var(--color-accent);
 }
 
-/* how many movies are in each list */
+/* How many movies are in each list */
 .nav-count {
   min-width: 1.4rem;
   padding: 0 0.4rem;
@@ -96,7 +96,7 @@
 
 /* ---------- Page layout ---------- */
 
-/* each page limits its own width, so the detail page's hero can run edge to edge */
+/* Each page limits its own width, so the detail page's hero can run edge to edge */
 .page {
   width: 100%;
   max-width: var(--page-width);
@@ -153,7 +153,7 @@
 
 /* ---------- Browse tabs ---------- */
 
-/* underlined rather than filled, so they don't compete with the header's active link */
+/* Underlined rather than filled, so they don't compete with the header's active link */
 .browse-tabs {
   display: flex;
   flex-wrap: wrap;
@@ -195,7 +195,7 @@
   padding: 0.25rem 0;
 }
 
-/* on phones the chips scroll sideways instead of taking up several lines */
+/* On phones the chips scroll sideways instead of taking up several lines */
 @media (max-width: 40rem) {
   .genre-filter {
     flex-wrap: nowrap;
@@ -235,7 +235,7 @@
 
 /* ---------- Movie grid and cards ---------- */
 
-/* as many columns as fit, two on a typical phone */
+/* As many columns as fit, two on a typical phone */
 .movie-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
@@ -261,7 +261,7 @@
     border-color 0.2s ease;
 }
 
-/* keyboard users get the same lift as mouse users when focus is inside the card */
+/* Keyboard users get the same lift as mouse users when focus is inside the card */
 .card:hover,
 .card:focus-within {
   transform: translateY(-4px);
@@ -276,7 +276,7 @@
   }
 }
 
-/* the link grows to fill the card, so the buttons line up at the bottom even when titles wrap */
+/* The link grows to fill the card, so the buttons line up at the bottom even when titles wrap */
 .card-link {
   display: flex;
   flex: 1;
@@ -285,7 +285,7 @@
   text-decoration: none;
 }
 
-/* the card clips anything outside it, so draw the focus ring just inside the edge */
+/* The card clips anything outside it, so draw the focus ring just inside the edge */
 .card-link:focus-visible {
   outline-offset: -3px;
   border-radius: var(--radius) var(--radius) 0 0;
@@ -298,7 +298,7 @@
   background-color: var(--color-surface-raised);
 }
 
-/* shown in place of a missing poster, at the same size */
+/* Shown in place of a missing poster, at the same size */
 .poster-placeholder {
   display: flex;
   align-items: center;
@@ -334,7 +334,7 @@
 
 /* ---------- Toggle buttons ---------- */
 
-/* outlined when off, filled with the list's colour when on */
+/* Outlined when off, filled with the list's colour when on */
 .toggle-button {
   display: inline-flex;
   flex: 1 1 6rem;
@@ -483,7 +483,7 @@
   padding: 4rem 1rem;
 }
 
-/* each dot bounces slightly after the one before it */
+/* Each dot bounces slightly after the one before it */
 .loading-dot {
   width: 0.75rem;
   height: 0.75rem;
@@ -513,7 +513,7 @@
   }
 }
 
-/* for people who have asked their device to reduce motion, fade instead of bouncing */
+/* For people who have asked their device to reduce motion, fade instead of bouncing */
 @media (prefers-reduced-motion: reduce) {
   .loading-dot {
     animation-name: fade;
@@ -532,7 +532,7 @@
 
 /* ---------- Movie detail page ---------- */
 
-/* the backdrop fades into the page background, so the text on top stays readable */
+/* The backdrop fades into the page background, so the text on top stays readable */
 .detail-hero {
   display: flex;
   align-items: flex-end;
@@ -592,7 +592,7 @@
   list-style: none;
 }
 
-/* dots between the date, runtime and rating */
+/* Dots between the date, runtime and rating */
 .detail-meta li:not(:last-child)::after {
   content: '·';
   margin-left: 0.5rem;
@@ -644,7 +644,7 @@
   padding-bottom: 4rem;
 }
 
-/* keeps the trailer at 16:9 at any width */
+/* Keeps the trailer at 16:9 at any width */
 .video-frame {
   overflow: hidden;
   aspect-ratio: 16 / 9;
@@ -658,7 +658,7 @@
   border: 0;
 }
 
-/* the credit sits beside the heading, and drops below it on phones if there isn't room */
+/* The credit sits beside the heading, and drops below it on phones if there isn't room */
 .watch-header {
   display: flex;
   flex-wrap: wrap;
@@ -671,7 +671,7 @@
   margin-bottom: 0;
 }
 
-/* accent coloured because it's the only pill here you can click, unlike the services below */
+/* Accent coloured because it's the only pill here you can click, unlike the services below */
 .watch-source {
   display: inline-flex;
   align-items: center;
@@ -696,7 +696,7 @@
   gap: 1rem;
 }
 
-/* the label sits beside its services, and above them on phones */
+/* The label sits beside its services, and above them on phones */
 .watch-option {
   display: grid;
   grid-template-columns: 7rem 1fr;
@@ -740,7 +740,7 @@
   color: var(--color-text-muted);
 }
 
-/* scrolls sideways at every width, with a thin scrollbar as a hint that there's more to see */
+/* Scrolls sideways at every width, with a thin scrollbar as a hint that there's more to see */
 .cast-list {
   display: flex;
   gap: 1rem;
@@ -775,7 +775,7 @@
   color: var(--color-text-muted);
 }
 
-/* on narrow screens the poster sits above the details */
+/* On narrow screens the poster sits above the details */
 @media (max-width: 40rem) {
   .detail-hero-inner {
     grid-template-columns: 1fr;

@@ -6,7 +6,7 @@ import App from '../App';
 import { fetchMovieDetails } from '../components/api';
 import { countPageView } from '../utils/analytics';
 
-// the tests use made-up movies instead of calling TMDB, and check what would be counted without sending it
+// The tests use made-up movies instead of calling TMDB, and check what would be counted without sending it
 vi.mock('../components/api');
 vi.mock('../utils/analytics');
 
@@ -33,7 +33,7 @@ const movieDetails = (id, title, overrides) => ({
   ...overrides,
 });
 
-// a response the test can finish whenever it likes, to control the order responses arrive in
+// A response the test can finish whenever it likes, to control the order responses arrive in
 const deferred = () => {
   let resolve;
   const promise = new Promise((done) => {
@@ -90,7 +90,7 @@ describe('Movie detail page', () => {
       AU: {
         link: 'https://tmdb.example/au',
         flatrate: [provider(1, 'Netflix'), provider(2, 'Netflix Standard with Ads')],
-        ads: [], // a way to watch with no services shouldn't leave an empty heading
+        ads: [], // A way to watch with no services shouldn't leave an empty heading
         rent: [provider(3, 'YouTube')],
       },
     };
@@ -123,7 +123,7 @@ describe('Movie detail page', () => {
 
     await screen.findByRole('heading', { level: 2, name: 'More like this' });
 
-    expect(screen.getAllByRole('article')).toHaveLength(11); // the movie itself, plus 10 related movies
+    expect(screen.getAllByRole('article')).toHaveLength(11); // The movie itself, plus 10 related movies
     expect(screen.getByRole('heading', { level: 3, name: 'Related 1' })).toBeInTheDocument();
 
     const wishButton = screen.getByRole('button', { name: 'Wish list, Related 1' });
@@ -147,7 +147,7 @@ describe('Movie detail page', () => {
     expect(await screen.findByRole('heading', { level: 1, name: 'Dune' })).toBeInTheDocument();
     expect(screen.queryByRole('heading', { level: 1, name: 'Inception' })).not.toBeInTheDocument();
     expect(document.title).toBe('Dune | MovieMania');
-    expect(window.scrollTo).toHaveBeenCalledTimes(2); // once for each movie opened
+    expect(window.scrollTo).toHaveBeenCalledTimes(2); // Once for each movie opened
     expect(countPageView.mock.calls).toEqual([
       ['/movie/1', 'Inception'],
       ['/movie/2', 'Dune'],
@@ -155,7 +155,7 @@ describe('Movie detail page', () => {
   });
 
   it("doesn't count a visit to a movie that fails to load", async () => {
-    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {}); // the app logs the failure, which isn't useful in test output
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {}); // The app logs the failure, which isn't useful in test output
     fetchMovieDetails.mockRejectedValue(new Error('not found'));
     render(<App />);
 
@@ -175,7 +175,7 @@ describe('Movie detail page', () => {
     );
     render(<App />);
 
-    // open Dune, then go back while its response is still on the way
+    // Open Dune, then go back while its response is still on the way
     await user.click(await screen.findByRole('link', { name: /Dune/ }));
     window.history.back();
     await vi.waitFor(() => expect(window.location.pathname).toBe('/movie/1'));
@@ -193,7 +193,7 @@ describe('Movie detail page', () => {
 
   it('clears an earlier error when another movie loads', async () => {
     const user = userEvent.setup();
-    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {}); // the app logs the failure, which isn't useful in test output
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {}); // The app logs the failure, which isn't useful in test output
     fetchMovieDetails.mockResolvedValueOnce(
       movieDetails(1, 'Inception', { recommendations: { results: [related(2, 'Dune')] } }),
     );

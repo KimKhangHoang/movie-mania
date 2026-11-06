@@ -3,13 +3,13 @@ import { countEvent, countPageView } from './analytics';
 
 const LIVE_HOSTNAME = 'kimkhanghoang-moviemania.vercel.app';
 
-// the parameters of the most recent request to GoatCounter
+// The parameters of the most recent request to GoatCounter
 const lastCount = () => new URL(navigator.sendBeacon.mock.lastCall[0]);
 
 describe('analytics', () => {
   beforeEach(() => {
     vi.stubGlobal('navigator', { sendBeacon: vi.fn(() => true), webdriver: false });
-    // what the page's address would be during a search on the live site
+    // What the page's address would be during a search on the live site
     vi.stubGlobal('location', { hostname: LIVE_HOSTNAME, search: '?q=secret-search' });
   });
 
@@ -39,7 +39,7 @@ describe('analytics', () => {
 
   it('only sends the referrer with the first page view', async () => {
     const referrer = vi.spyOn(document, 'referrer', 'get').mockReturnValue('https://example.com/');
-    vi.resetModules(); // the referrer is read when the module loads
+    vi.resetModules(); // The referrer is read when the module loads
     const { countPageView: countOnNewVisit } = await import('./analytics');
 
     countOnNewVisit('/', 'Movies');

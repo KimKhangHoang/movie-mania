@@ -9,7 +9,7 @@ describe('TMDB proxy', () => {
   let tmdbFetch;
 
   beforeEach(() => {
-    // a fake key and a fake TMDB, so these tests never use the real key or the network
+    // A fake key and a fake TMDB, so these tests never use the real key or the network
     vi.stubEnv('TMDB_API_KEY', 'test-key');
     tmdbFetch = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response('{"results":[]}'));
   });

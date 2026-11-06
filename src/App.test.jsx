@@ -6,7 +6,7 @@ import App from './App';
 import { fetchGenres, fetchMovieList, fetchMovieQuery } from './components/api';
 import { countEvent, countPageView } from './utils/analytics';
 
-// the tests use made-up movies instead of calling TMDB, and check what would be counted without sending it
+// The tests use made-up movies instead of calling TMDB, and check what would be counted without sending it
 vi.mock('./components/api');
 vi.mock('./utils/analytics');
 
@@ -69,12 +69,12 @@ describe('MovieMania', () => {
     expect(window.location.search).toBe('?genre=18');
     expect(fetchMovieList).toHaveBeenLastCalledWith('popular', 1, '18');
 
-    // the genre carries over to a list that can use it
+    // The genre carries over to a list that can use it
     await user.click(screen.getByRole('link', { name: 'Top rated' }));
     expect(screen.getByRole('heading', { level: 1, name: 'Top rated Drama movies' })).toBeInTheDocument();
     expect(fetchMovieList).toHaveBeenLastCalledWith('top_rated', 1, '18');
 
-    // trending can't filter by genre, so the filter disappears
+    // Trending can't filter by genre, so the filter disappears
     await user.click(screen.getByRole('link', { name: 'Trending' }));
     expect(screen.getByRole('heading', { level: 1, name: 'Trending this week' })).toBeInTheDocument();
     expect(fetchMovieList).toHaveBeenLastCalledWith('trending', 1, null);
@@ -92,7 +92,7 @@ describe('MovieMania', () => {
 
     expect(fetchMovieList).toHaveBeenLastCalledWith('popular', 2, null);
     expect(screen.getAllByRole('article')).toHaveLength(3);
-    expect(screen.queryByRole('button', { name: 'Load more' })).not.toBeInTheDocument(); // that was the last page
+    expect(screen.queryByRole('button', { name: 'Load more' })).not.toBeInTheDocument(); // That was the last page
   });
 
   it('counts a search once, without what was typed or another page view', async () => {
@@ -117,7 +117,7 @@ describe('MovieMania', () => {
 
     await user.type(screen.getByRole('searchbox', { name: 'Search movies' }), 'dune{Enter}');
     await screen.findByRole('heading', { level: 2, name: 'Dune' });
-    await new Promise((done) => setTimeout(done, 500)); // longer than the search delay, so a second count would have happened
+    await new Promise((done) => setTimeout(done, 500)); // Longer than the search delay, so a second count would have happened
 
     expect(countEvent.mock.calls).toEqual([['search']]);
   });
@@ -163,7 +163,7 @@ describe('MovieMania', () => {
   });
 
   it('shows an error when movies fail to load', async () => {
-    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {}); // the app logs the failure, which isn't useful in test output
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {}); // The app logs the failure, which isn't useful in test output
     fetchMovieList.mockRejectedValue(new Error('network down'));
     render(<App />);
 
