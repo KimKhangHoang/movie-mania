@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { BROWSE_LISTS, browseUrl } from '../utils/browseLists';
 
 // Tabs for switching between the movie lists. They're links, so each list has its own shareable URL.

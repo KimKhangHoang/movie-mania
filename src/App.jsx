@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link, NavLink } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link, NavLink } from 'react-router';
 import usePersistentState from './hooks/usePersistentState';
 import Movies from './pages/Movies';
 import WishList from './pages/WishList';

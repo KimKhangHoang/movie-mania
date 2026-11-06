@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import EmptyState from '../components/EmptyState';
 import MovieGrid from '../components/MovieGrid';
 import useDocumentTitle from '../hooks/useDocumentTitle';
