@@ -6,7 +6,7 @@ import { browseUrl } from '../utils/browseLists';
 const GenreFilter = ({ listKey, genres, activeGenre }) => {
   const rowRef = useRef(null);
 
-  // on phones the chips scroll sideways, so bring the chosen one into view
+  // On phones the chips scroll sideways, so bring the chosen one into view
   useEffect(() => {
     const row = rowRef.current;
     const chip = row?.querySelector('[aria-current="page"]');

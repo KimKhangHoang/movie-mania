@@ -14,7 +14,7 @@ const MovieCard = ({ movie, headingLevel: Heading = 'h2', ...toggleProps }) => {
         {poster_path ? (
           <img src={`https://image.tmdb.org/t/p/w500${poster_path}`} className="card-poster" alt="" loading="lazy" />
         ) : (
-          // some movies have no poster on TMDB, so show a placeholder instead of a broken image
+          // Some movies have no poster on TMDB, so show a placeholder instead of a broken image
           <div className="poster-placeholder" aria-hidden="true">
             <i className="fa-solid fa-film"></i>
           </div>

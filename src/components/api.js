@@ -8,11 +8,11 @@ const tmdbGet = (path, params = {}) => axios.get('/api/tmdb', { params: { path, 
 // TMDB never serves more than 500 pages of a list, even when it reports more
 const MAX_PAGES = 500;
 
-// one page of a movie list, plus how many pages there are in total
+// One page of a movie list, plus how many pages there are in total
 const toMoviePage = (data) => ({ movies: data.results, totalPages: Math.min(data.total_pages, MAX_PAGES) });
 
 export const fetchMovieList = async (listKey, page = 1, genreId = null) => {
-  // fetch a page of one of the browse lists, e.g. popular or top rated, optionally narrowed to a genre
+  // Fetch a page of one of the browse lists, e.g. popular or top rated, optionally narrowed to a genre
   const list = BROWSE_LISTS[listKey];
   const params = { ...list.params(genreId), page };
   if (genreId) params.with_genres = genreId;
@@ -20,30 +20,30 @@ export const fetchMovieList = async (listKey, page = 1, genreId = null) => {
   return toMoviePage(response.data);
 };
 
-// the genre names rarely change, so they're fetched once and reused
+// The genre names rarely change, so they're fetched once and reused
 let genresRequest = null;
 
 export const fetchGenres = () => {
-  // fetch TMDB's list of movie genres, e.g. { id: 18, name: 'Drama' }
+  // Fetch TMDB's list of movie genres, e.g. { id: 18, name: 'Drama' }
   genresRequest ??= tmdbGet('genre/movie/list')
     .then((response) => response.data.genres)
     .catch((error) => {
-      genresRequest = null; // let the next visit try again
+      genresRequest = null; // Let the next visit try again
       throw error;
     });
   return genresRequest;
 };
 
 export const fetchMovieDetails = async (id) => {
-  // fetch a movie details
+  // Fetch a movie details
   const response = await tmdbGet(`movie/${id}`, {
-    append_to_response: 'videos,credits,recommendations,watch/providers', // include the trailer, cast, related movies and where to watch in the same request
+    append_to_response: 'videos,credits,recommendations,watch/providers', // Include the trailer, cast, related movies and where to watch in the same request
   });
-  return response.data; // return the movie details
+  return response.data; // Return the movie details
 };
 
 export const fetchMovieQuery = async (query, page = 1) => {
-  // fetch a page of movies matching the query
+  // Fetch a page of movies matching the query
   const response = await tmdbGet('search/movie', { query, page });
   return toMoviePage(response.data);
 };

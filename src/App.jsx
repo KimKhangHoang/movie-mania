@@ -10,16 +10,16 @@ import { isInList } from './utils/lists';
 import './App.css';
 
 function App() {
-  const [wishList, setWishList] = usePersistentState('wish-list', []); // wish list state, saved in the browser
-  const [watchedMovies, setWatchedMovies] = usePersistentState('watched-movies', []); // watched movies state, saved in the browser
+  const [wishList, setWishList] = usePersistentState('wish-list', []); // Wish list state, saved in the browser
+  const [watchedMovies, setWatchedMovies] = usePersistentState('watched-movies', []); // Watched movies state, saved in the browser
 
-  // returns a handler that adds a movie to a list, or removes it if it's already there
+  // Returns a handler that adds a movie to a list, or removes it if it's already there
   const toggleInList = (currentList, setList, addEvent) => (movie) => {
     if (!isInList(currentList, movie)) countEvent(addEvent);
     setList((list) => (isInList(list, movie) ? list.filter((item) => item.id !== movie.id) : [...list, movie]));
   };
 
-  // what every page needs to show and update both lists
+  // What every page needs to show and update both lists
   const listProps = {
     wishList,
     watchedMovies,
@@ -29,7 +29,7 @@ function App() {
 
   return (
     <Router>
-      {/* lets keyboard users jump past the header straight to the page content */}
+      {/* Lets keyboard users jump past the header straight to the page content */}
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>

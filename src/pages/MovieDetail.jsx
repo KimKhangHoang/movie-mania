@@ -12,45 +12,45 @@ import { formatReleaseDate } from '../utils/formatReleaseDate';
 import { formatRuntime } from '../utils/formatRuntime';
 import { isInList } from '../utils/lists';
 
-const MAX_CAST = 12; // the top-billed actors, since some movies list 80 or more
-const MAX_RECOMMENDATIONS = 10; // fills every row of the grid's 5 columns on desktop and 2 columns on phones
+const MAX_CAST = 12; // The top-billed actors, since some movies list 80 or more
+const MAX_RECOMMENDATIONS = 10; // Fills every row of the grid's 5 columns on desktop and 2 columns on phones
 
 function MovieDetail(listProps) {
   const { wishList, watchedMovies, onToggleWishList, onToggleWatched } = listProps;
-  const { id } = useParams(); // get the movie ID from the URL
-  const [movie, setMovie] = useState(null); // a state to store movie details
-  const [loading, setLoading] = useState(true); // a state to track loading status
-  const [error, setError] = useState(null); // a state for error detection
+  const { id } = useParams(); // Get the movie ID from the URL
+  const [movie, setMovie] = useState(null); // A state to store movie details
+  const [loading, setLoading] = useState(true); // A state to track loading status
+  const [error, setError] = useState(null); // A state for error detection
 
   useEffect(() => {
-    let ignore = false; // set when another movie is opened, so a slower older response can't overwrite it
-    window.scrollTo(0, 0); // opening a related movie stays on this page, so start the new one from the top
+    let ignore = false; // Set when another movie is opened, so a slower older response can't overwrite it
+    window.scrollTo(0, 0); // Opening a related movie stays on this page, so start the new one from the top
 
     const getMovieData = async () => {
-      // an async function to fetch and store a movie details
+      // An async function to fetch and store a movie details
       setLoading(true);
-      setError(null); // clear any previous errors
+      setError(null); // Clear any previous errors
       setMovie(null);
 
       try {
-        const movieDetails = await fetchMovieDetails(id); // fetch the movie details from the API
+        const movieDetails = await fetchMovieDetails(id); // Fetch the movie details from the API
         if (ignore) return;
 
         const trailerData = movieDetails.videos?.results.find(
-          // extract trailer info from video data
+          // Extract trailer info from video data
           (video) => video.type === 'Trailer' && video.site === 'YouTube',
         );
 
         setMovie({
-          // update the state to store movie details
-          ...movieDetails, // copy all properties from movieDetails into the new object
-          trailer: trailerData ? { key: trailerData.key } : null, // if exist then .key of YouTube videos, if not then null
+          // Update the state to store movie details
+          ...movieDetails, // Copy all properties from movieDetails into the new object
+          trailer: trailerData ? { key: trailerData.key } : null, // If exist then .key of YouTube videos, if not then null
         });
       } catch (error) {
         if (!ignore) setError("Couldn't load this movie. It may not exist, or the connection failed.");
         console.error('Error in movie detail page: ', error);
       } finally {
-        if (!ignore) setLoading(false); // set loading status to false once movies are fetched
+        if (!ignore) setLoading(false); // Set loading status to false once movies are fetched
       }
     };
 
@@ -61,20 +61,20 @@ function MovieDetail(listProps) {
   }, [id]);
 
   useDocumentTitle(movie?.title);
-  // counted once this movie loads, so the stats show its name rather than just its ID.
+  // Counted once this movie loads, so the stats show its name rather than just its ID.
   // The ID check is for the moment after opening a related movie, when the previous movie is still in state.
   usePageView(String(movie?.id) === id ? movie.title : null);
 
   if (loading)
     return (
-      // show the loading animation while fetching
+      // Show the loading animation while fetching
       <div className="page">
         <Loading />
       </div>
     );
   if (error)
     return (
-      // show a message when an error occurs
+      // Show a message when an error occurs
       <p className="page status-message error" role="alert">
         {error}
       </p>
@@ -86,7 +86,7 @@ function MovieDetail(listProps) {
   const cast = movie.credits?.cast.slice(0, MAX_CAST) ?? [];
   const recommendations = movie.recommendations?.results.slice(0, MAX_RECOMMENDATIONS) ?? [];
 
-  // only the fields the list pages need, so saved lists stay small
+  // Only the fields the list pages need, so saved lists stay small
   const savedMovie = {
     id: movie.id,
     title: movie.title,
@@ -96,7 +96,7 @@ function MovieDetail(listProps) {
 
   return (
     <article className="movie-details">
-      {/* the backdrop image sits behind the hero and fades into the page */}
+      {/* The backdrop image sits behind the hero and fades into the page */}
       <section
         className="detail-hero"
         style={

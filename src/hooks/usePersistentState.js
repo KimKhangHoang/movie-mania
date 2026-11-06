@@ -7,7 +7,7 @@ const STORAGE_PREFIX = 'movie-mania:';
 function usePersistentState(key, initialValue) {
   const storageKey = STORAGE_PREFIX + key;
 
-  // read the saved value only once, on first render
+  // Read the saved value only once, on first render
   const [value, setValue] = useState(() => {
     try {
       const saved = localStorage.getItem(storageKey);
@@ -17,12 +17,12 @@ function usePersistentState(key, initialValue) {
     }
   });
 
-  // save the value whenever it changes
+  // Save the value whenever it changes
   useEffect(() => {
     try {
       localStorage.setItem(storageKey, JSON.stringify(value));
     } catch {
-      // storage is full or blocked, so the value only lasts until the page is closed
+      // Storage is full or blocked, so the value only lasts until the page is closed
     }
   }, [storageKey, value]);
 

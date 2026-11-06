@@ -11,7 +11,7 @@ import usePageView from '../hooks/usePageView';
 import { countEvent } from '../utils/analytics';
 import { BROWSE_LISTS, DEFAULT_LIST } from '../utils/browseLists';
 
-const SEARCH_DELAY_MS = 400; // how long to wait after the last keystroke before searching
+const SEARCH_DELAY_MS = 400; // How long to wait after the last keystroke before searching
 const MAX_LOADED_PAGES = 8; // "Load more" stops after this many pages (160 movies), so the page stays light
 
 // TMDB's pages can overlap when rankings shift between requests, so skip movies that are already shown
@@ -20,7 +20,7 @@ const addNewMovies = (shown, more) => {
   return [...shown, ...more.filter((movie) => !shownIds.has(movie.id))];
 };
 
-// updates the search in the URL while keeping the other settings, like the list being browsed
+// Updates the search in the URL while keeping the other settings, like the list being browsed
 const withSearch = (params, text) => {
   const next = new URLSearchParams(params);
   if (text) next.set('q', text);
@@ -28,71 +28,71 @@ const withSearch = (params, text) => {
   return next;
 };
 
-// fetches a page of search results, or of the list being browsed when there's no search
+// Fetches a page of search results, or of the list being browsed when there's no search
 const fetchMoviesPage = (query, listKey, genreId, page) =>
   query ? fetchMovieQuery(query, page) : fetchMovieList(listKey, page, genreId);
 
 function Movies(listProps) {
-  const [searchParams, setSearchParams] = useSearchParams(); // the search lives in the URL (?q=...) so it survives navigation
-  const query = searchParams.get('q') ?? ''; // the search currently applied
+  const [searchParams, setSearchParams] = useSearchParams(); // The search lives in the URL (?q=...) so it survives navigation
+  const query = searchParams.get('q') ?? ''; // The search currently applied
   const listParam = searchParams.get('list');
-  const listKey = BROWSE_LISTS[listParam] ? listParam : DEFAULT_LIST; // the list being browsed when not searching
+  const listKey = BROWSE_LISTS[listParam] ? listParam : DEFAULT_LIST; // The list being browsed when not searching
   const listHasGenres = BROWSE_LISTS[listKey].hasGenres;
   const genreParam = searchParams.get('genre') ?? '';
-  const genreId = listHasGenres && /^\d+$/.test(genreParam) ? genreParam : null; // ignored on lists that can't filter by genre
-  const requestKey = `${query}|${listKey}|${genreId}`; // identifies which movies are showing
-  const [inputValue, setInputValue] = useState(query); // what is typed in the search bar, updated on every keystroke
-  const [lastQuery, setLastQuery] = useState(query); // the query seen on the previous render
-  const [movies, setMovies] = useState([]); // a state to store the movies to show
-  const [loading, setLoading] = useState(true); // a state to track loading status
-  const [error, setError] = useState(null); // a state for error detection
-  const [page, setPage] = useState(1); // how many pages of results are showing
-  const [totalPages, setTotalPages] = useState(1); // how many pages TMDB has for this list
-  const [loadingMore, setLoadingMore] = useState(false); // a state to track the "Load more" button
-  const [loadMoreError, setLoadMoreError] = useState(null); // a state for a failed "Load more"
-  const [genres, setGenres] = useState([]); // genre names for the filter, empty until loaded
-  const latestRequest = useRef(requestKey); // lets "Load more" check the search or list hasn't changed while it was loading
+  const genreId = listHasGenres && /^\d+$/.test(genreParam) ? genreParam : null; // Ignored on lists that can't filter by genre
+  const requestKey = `${query}|${listKey}|${genreId}`; // Identifies which movies are showing
+  const [inputValue, setInputValue] = useState(query); // What is typed in the search bar, updated on every keystroke
+  const [lastQuery, setLastQuery] = useState(query); // The query seen on the previous render
+  const [movies, setMovies] = useState([]); // A state to store the movies to show
+  const [loading, setLoading] = useState(true); // A state to track loading status
+  const [error, setError] = useState(null); // A state for error detection
+  const [page, setPage] = useState(1); // How many pages of results are showing
+  const [totalPages, setTotalPages] = useState(1); // How many pages TMDB has for this list
+  const [loadingMore, setLoadingMore] = useState(false); // A state to track the "Load more" button
+  const [loadMoreError, setLoadMoreError] = useState(null); // A state for a failed "Load more"
+  const [genres, setGenres] = useState([]); // Genre names for the filter, empty until loaded
+  const latestRequest = useRef(requestKey); // Lets "Load more" check the search or list hasn't changed while it was loading
 
   useEffect(() => {
-    // apply the search once typing pauses, instead of sending a request on every keystroke
+    // Apply the search once typing pauses, instead of sending a request on every keystroke
     const trimmed = inputValue.trim();
     if (trimmed === query) return;
 
     const timer = setTimeout(() => {
-      setSearchParams((params) => withSearch(params, trimmed), { replace: true }); // replace, so each search doesn't add a history entry
+      setSearchParams((params) => withSearch(params, trimmed), { replace: true }); // Replace, so each search doesn't add a history entry
       if (trimmed) countEvent('search');
     }, SEARCH_DELAY_MS);
-    return () => clearTimeout(timer); // a new keystroke cancels the pending search
+    return () => clearTimeout(timer); // A new keystroke cancels the pending search
   }, [inputValue, query, setSearchParams]);
 
   useEffect(() => {
-    // load the genre names once, for the genre filter
+    // Load the genre names once, for the genre filter
     fetchGenres()
       .then(setGenres)
-      .catch((error) => console.error('Error loading genres: ', error)); // the page still works, just without the filter
+      .catch((error) => console.error('Error loading genres: ', error)); // The page still works, just without the filter
   }, []);
 
-  // keep the search bar in step when the URL changes elsewhere, e.g. the Movies link or the back button
+  // Keep the search bar in step when the URL changes elsewhere, e.g. the Movies link or the back button
   if (query !== lastQuery) {
     setLastQuery(query);
     if (inputValue.trim() !== query) setInputValue(query);
   }
 
   useEffect(() => {
-    let ignore = false; // set when a newer search starts, so a slower older response can't overwrite its results
+    let ignore = false; // Set when a newer search starts, so a slower older response can't overwrite its results
     latestRequest.current = requestKey;
 
     const getMovies = async () => {
-      // an async function to fetch and store the first page of movies
+      // An async function to fetch and store the first page of movies
       setLoading(true);
-      setError(null); // clear any previous errors
+      setError(null); // Clear any previous errors
       setLoadingMore(false);
       setLoadMoreError(null);
 
       try {
         const result = await fetchMoviesPage(query, listKey, genreId, 1);
         if (!ignore) {
-          setMovies(result.movies); // store movies
+          setMovies(result.movies); // Store movies
           setPage(1);
           setTotalPages(result.totalPages);
         }
@@ -100,24 +100,24 @@ function Movies(listProps) {
         if (!ignore) setError("Couldn't load movies. Please try again.");
         console.error('Error in movies page: ', error);
       } finally {
-        if (!ignore) setLoading(false); // set loading status to false once movies are fetched
+        if (!ignore) setLoading(false); // Set loading status to false once movies are fetched
       }
     };
 
-    getMovies(); // call the predefined async function
+    getMovies(); // Call the predefined async function
     return () => {
       ignore = true;
     };
   }, [query, listKey, genreId, requestKey]);
 
   const handleSearch = (event) => {
-    // handle search query changes
+    // Handle search query changes
     setInputValue(event.target.value);
   };
 
   const handleLoadMore = async () => {
-    // fetch the next page and add it below the movies already showing
-    if (loadingMore) return; // ignore extra clicks while a page is loading
+    // Fetch the next page and add it below the movies already showing
+    if (loadingMore) return; // Ignore extra clicks while a page is loading
     const requested = requestKey;
     const nextPage = page + 1;
     setLoadingMore(true);
@@ -125,7 +125,7 @@ function Movies(listProps) {
 
     try {
       const result = await fetchMoviesPage(query, listKey, genreId, nextPage);
-      if (latestRequest.current !== requested) return; // the search or list changed while this page was loading
+      if (latestRequest.current !== requested) return; // The search or list changed while this page was loading
       setMovies((shown) => addNewMovies(shown, result.movies));
       setPage(nextPage);
       setTotalPages(result.totalPages);
@@ -138,7 +138,7 @@ function Movies(listProps) {
   };
 
   const handleSubmit = (event) => {
-    // pressing Enter searches straight away instead of waiting for the pause
+    // Pressing Enter searches straight away instead of waiting for the pause
     event.preventDefault();
     const trimmed = inputValue.trim();
     if (trimmed === query) return;
@@ -146,21 +146,21 @@ function Movies(listProps) {
     if (trimmed) countEvent('search');
   };
 
-  // e.g. "Top rated Drama movies" when a genre is chosen, once the genre names have loaded
+  // E.g. "Top rated Drama movies" when a genre is chosen, once the genre names have loaded
   const genreName = genres.find((genre) => String(genre.id) === genreId)?.name;
   const listTitle = genreName ? `${BROWSE_LISTS[listKey].label} ${genreName} movies` : BROWSE_LISTS[listKey].title;
   const pageTitle = query ? `Results for “${query}”` : listTitle;
   useDocumentTitle(pageTitle);
-  usePageView('Movies'); // not pageTitle, which can contain what was searched for
+  usePageView('Movies'); // Not pageTitle, which can contain what was searched for
 
-  // tells screen reader users how many movies are showing after a search or "Load more", since they can't see the grid change
+  // Tells screen reader users how many movies are showing after a search or "Load more", since they can't see the grid change
   const itemName = query ? 'result' : 'movie';
   const resultsAnnouncement =
     !loading && !error && (query || page > 1)
       ? `Showing ${movies.length} ${movies.length === 1 ? itemName : `${itemName}s`}`
       : '';
 
-  // decide what to show under the heading, keeping the search bar on screen in every case
+  // Decide what to show under the heading, keeping the search bar on screen in every case
   let content;
   if (loading) {
     content = <Loading />;
@@ -182,12 +182,12 @@ function Movies(listProps) {
       <>
         <MovieGrid movies={movies} {...listProps} />
 
-        {/* past the cap, suggest searching instead of loading ever more movies */}
+        {/* Past the cap, suggest searching instead of loading ever more movies */}
         {page >= MAX_LOADED_PAGES && page < totalPages && (
           <p className="list-end-note">You&apos;ve reached the end of this list. Search for a title to find more.</p>
         )}
 
-        {/* hidden once every page has been loaded, or the cap is reached */}
+        {/* Hidden once every page has been loaded, or the cap is reached */}
         {page < Math.min(totalPages, MAX_LOADED_PAGES) && (
           <div className="load-more">
             {loadMoreError && (
@@ -231,7 +231,7 @@ function Movies(listProps) {
         />
       </form>
 
-      {/* searching replaces the lists, so the tabs only show while browsing */}
+      {/* Searching replaces the lists, so the tabs only show while browsing */}
       {!query && <BrowseTabs activeList={listKey} activeGenre={genreId} />}
       {!query && listHasGenres && genres.length > 0 && (
         <GenreFilter listKey={listKey} genres={genres} activeGenre={genreId} />
