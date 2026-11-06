@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { formatReleaseDate } from '../utils/formatReleaseDate';
 import ListToggles from './ListToggles';
 

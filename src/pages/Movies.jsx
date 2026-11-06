@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 import { fetchGenres, fetchMovieList, fetchMovieQuery } from '../components/api';
 import BrowseTabs from '../components/BrowseTabs';
 import EmptyState from '../components/EmptyState';

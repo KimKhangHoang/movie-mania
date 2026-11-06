@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { countPageView } from '../utils/analytics';
 
 // Counts a visit to the current page, once its title is known.

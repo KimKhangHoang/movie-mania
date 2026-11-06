@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fetchMovieDetails } from '../components/api';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import CastList from '../components/CastList';
 import ListToggles from '../components/ListToggles';
 import Loading from '../components/Loading';

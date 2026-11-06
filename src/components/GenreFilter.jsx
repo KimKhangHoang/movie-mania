@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { browseUrl } from '../utils/browseLists';
 
 // Genre chips for narrowing a list. They're links, so a filtered list can be shared or bookmarked.
