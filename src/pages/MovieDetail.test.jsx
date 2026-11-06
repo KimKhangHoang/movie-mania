@@ -81,7 +81,7 @@ describe('Movie detail page', () => {
     expect(screen.queryByRole('heading', { name: 'More like this' })).not.toBeInTheDocument();
   });
 
-  it('shows the ways to watch in Australia, with the required JustWatch credit', async () => {
+  it('shows the ways to watch using the Australian data, with the required JustWatch credit', async () => {
     const provider = (provider_id, provider_name) => ({ provider_id, provider_name, logo_path: `/${provider_id}.png` });
     const results = {
       US: { link: 'https://tmdb.example/us', flatrate: [provider(9, 'Only in the US')] },
@@ -100,11 +100,8 @@ describe('Movie detail page', () => {
 
     expect(section.getAllByRole('heading', { level: 3 }).map((title) => title.textContent)).toEqual(['Stream', 'Rent']);
     expect(section.getAllByRole('listitem').map((item) => item.textContent)).toEqual(['Netflix', 'YouTube']);
-    expect(section.getByRole('link', { name: /See how to watch on TMDB/ })).toHaveAttribute(
-      'href',
-      'https://tmdb.example/au',
-    );
-    expect(section.getByRole('link', { name: /JustWatch/ })).toBeInTheDocument();
+    // The credit is the only link, since the services are for reference
+    expect(section.getByRole('link')).toHaveTextContent('via JustWatch');
   });
 
   it('says when there is nowhere to watch in Australia, and still credits JustWatch', async () => {
@@ -112,9 +109,8 @@ describe('Movie detail page', () => {
     fetchMovieDetails.mockResolvedValue(movieDetails(1, 'Inception', { 'watch/providers': { results } }));
     render(<App />);
 
-    expect(await screen.findByText(/no streaming, rental or purchase options/)).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /JustWatch/ })).toBeInTheDocument();
-    expect(screen.queryByRole('link', { name: /See how to watch on TMDB/ })).not.toBeInTheDocument();
+    expect(await screen.findByText('No streaming, rental or purchase options listed.')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /via JustWatch/ })).toBeInTheDocument();
   });
 
   it('lets you save a related movie and shows its title under the section heading', async () => {
